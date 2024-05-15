@@ -1,7 +1,7 @@
 import { useAccount, useConfig } from 'wagmi'
 
 const useIsWrongNetwork = () => {
-    const { chain, address } = useAccount()
+    const { address, chain } = useAccount()
     const { chains } = useConfig()
 
     const isWrongNetwork =

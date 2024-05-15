@@ -10,6 +10,13 @@ import { walletConnect, injected, coinbaseWallet } from 'wagmi/connectors'
 import { IRefPhaserGame, PhaserGame } from '../game/PhaserGame';
 import { MainMenu } from '../game/scenes/MainMenu';
 
+
+// Components
+import {
+    NavSection,
+    MintNftSection,
+} from '@/components'
+
 // Hooks
 //import { useIsMounted } from '@/hooks'
 
@@ -92,10 +99,7 @@ const metadata = {
     enableOnramp: false // Optional - false as default
   })
 
-// Components
-import {
-    Nav
-} from '@/components'
+
 
 function App()
 {
@@ -197,7 +201,8 @@ function App()
                             <div>
                                 <button className="button" onClick={addSprite}>Add New Sprite</button>
                             </div>
-                            <Nav />
+                            <NavSection />
+                            <MintNftSection />
                         </div>
                     </div>
           

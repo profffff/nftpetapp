@@ -8,10 +8,14 @@ const ConnectButton = () => {
 
   return (
     <>
+    <div>
       <button  className="button"
        onClick={() => open()}>CONNECT WALLET
       </button>
+      </div>
+      <div>
       <button className="button" onClick={() => open({ view: 'Networks' })}>CHOOSE NETWORK</button>
+      </div>
     </>
   )
 }
