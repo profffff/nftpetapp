@@ -38,7 +38,6 @@ const useMint = () => {
     })
 
     const mintNFT = async (
-        quantity: string,
         address: string | undefined
     ) => {
         dispatch(undefined)
@@ -51,27 +50,28 @@ const useMint = () => {
             
             prepareLoading = true
             dispatch({ isPrepareLoading: true })
-           
-            // const result = await simulateContract(config, {
-            //     ...contractConfig,
-            //     functionName: 'mintTo',
-            //     args: [
-            //         '0x3Ed961CD654d71864661ACf3c761B65D74F10026',
-            //         'ipfs://QmTSQM8nVzR68pCxuzXrQZpmfpfwfxtjdXCj7JvA3JvFf9/'
-            //    ]
+        
 
-            // })
-            
             const result = await simulateContract(config, {
                 ...contractConfig,
-                functionName: 'safeTransferFrom',
+                functionName: 'claim',
                 args: [
-                    '0x3Ed961CD654d71864661ACf3c761B65D74F10026',
-                    '0x3Ed961CD654d71864661ACf3c761B65D74F10026',
-                    3
-               ]
-
+                    address,
+                    parseUnits("1", 0),
+                    '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE',
+                    parseEther("0"),
+                    {
+                        proof: [],
+                        quantityLimitPerWallet:  parseUnits("1", 0),
+                        pricePerToken: parseEther("0"),
+                        currency: '0x0000000000000000000000000000000000000000',
+                    },
+                    '0x',
+               ],
+                value: parseEther("0"),
             })
+            
+        
 
             prepareLoading = false
             writeLoading = true

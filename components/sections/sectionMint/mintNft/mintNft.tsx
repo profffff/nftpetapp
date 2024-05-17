@@ -23,7 +23,7 @@ const mintNft = () => {
   const { state, dispatch, mintNFT } = useMint()
 
   const [inputValue, setInputValue] = useState('1')
-  const [quantity, setQuantity] = useState(inputValue)
+
 
 
   //const [showClaimedNFTModal, setShowClaimedNFTModal] = useState(false)
@@ -39,16 +39,7 @@ const mintNft = () => {
 
   async function submit(e: React.FormEvent<HTMLFormElement>) { 
     e.preventDefault() 
-    mintNFT("1", "0x3Ed961CD654d71864661ACf3c761B65D74F10026")
-    const formData = new FormData(e.target as HTMLFormElement) 
-    //const tokenId = formData.get('tokenId') as string 
-    const tokenId = "0x1b0E2b2864fFB39360f05907eAB5f86acA22b5ce" as string
-    // writeContract({
-    //   address: '0x3Ed961CD654d71864661ACf3c761B65D74F10026', //who to send
-    //   abi,
-    //   functionName: 'mint',
-    //   args: [BigInt(tokenId)],
-    // })
+    mintNFT(address)
   } 
 
   const { isLoading: isConfirming, isSuccess: isConfirmed } = 
@@ -56,8 +47,6 @@ const mintNft = () => {
       hash, 
     }) 
   
-    //<input name="address" placeholder="0xA0Cf…251e" required />
-    //<input name="value" placeholder="0.05" required />
   return (
     <nav
             ref={navRef}
@@ -65,7 +54,9 @@ const mintNft = () => {
     <form onSubmit={submit}>
   
       <button className="button"
-        disabled={isPending} 
+        disabled={isPending ||
+          state.isLoading
+        } 
         type="submit"
       >
         {isPending ? 'Confirming...' : 'Mint'} 
@@ -100,7 +91,6 @@ const mintNft = () => {
                             receiptError={state.receiptError}
                             transactionError={state.writeError}
                             isWalletConnected={true} 
-
                         />
 
                     </InfoMessageWrapper>
