@@ -7,20 +7,24 @@ import {
   useWriteContract,
   useAccount
 } from 'wagmi'
-//import { abi } from '@/components'
+
+import {  InfoMessage,
+  InfoMessageWrapper, } from '@/components'
 
 // Hooks
 import { useIsWrongNetwork, useMint } from '@/hooks'
  
 const mintNft = () => {
-  const { address, isConnected } = useAccount()
+  const { address, isConnected, isDisconnected } = useAccount()
   const [showClaimedNFTModal, setShowClaimedNFTModal] = useState(false)
+
   const navRef = useRef<HTMLElement>(null)
   const [isModalOpened, setIsModalOpened] = useState(false)
   const { state, dispatch, mintNFT } = useMint()
 
   const [inputValue, setInputValue] = useState('1')
   const [quantity, setQuantity] = useState(inputValue)
+
 
   //const [showClaimedNFTModal, setShowClaimedNFTModal] = useState(false)
   //const [showNFTGalleryModal, setShowNFTGalleryModal] = useState(false)
@@ -35,7 +39,7 @@ const mintNft = () => {
 
   async function submit(e: React.FormEvent<HTMLFormElement>) { 
     e.preventDefault() 
-    mintNFT(quantity, address)
+    mintNFT("1", "0x3Ed961CD654d71864661ACf3c761B65D74F10026")
     const formData = new FormData(e.target as HTMLFormElement) 
     //const tokenId = formData.get('tokenId') as string 
     const tokenId = "0x1b0E2b2864fFB39360f05907eAB5f86acA22b5ce" as string
@@ -51,7 +55,7 @@ const mintNft = () => {
     useWaitForTransactionReceipt({ 
       hash, 
     }) 
-
+  
     //<input name="address" placeholder="0xA0Cf…251e" required />
     //<input name="value" placeholder="0.05" required />
   return (
@@ -59,10 +63,7 @@ const mintNft = () => {
             ref={navRef}
         >
     <form onSubmit={submit}>
-
-     
-
-      
+  
       <button className="button"
         disabled={isPending} 
         type="submit"
@@ -75,9 +76,46 @@ const mintNft = () => {
       {error && (
         <div>Error: {(error as BaseError).shortMessage || error.message}</div>
       )}
+
+
+      
     </form>
 
+    {isConnected ? (
+    <InfoMessageWrapper
+                        isLoading={
+                            state.isPrepareLoading ||
+                            state.isReceiptLoading
+                        }
+                        isError={
+                            state.isError 
+                        }
+                        isActionRequired={state.isWriteLoading}
+                    >
+                    <InfoMessage
+                            isPrepareLoading={state.isPrepareLoading}
+                            prepareError={state.prepareError}
+                            isWriteLoading={state.isWriteLoading}
+                            isReceiptLoading={state.isReceiptLoading}
+                            receiptError={state.receiptError}
+                            transactionError={state.writeError}
+                            isWalletConnected={true} 
+
+                        />
+
+                    </InfoMessageWrapper>
+  ) 
+  : isDisconnected ?
+  <InfoMessageWrapper>
+  <InfoMessage 
+  isWalletConnected={false} 
+  />
+</InfoMessageWrapper>
   
+  
+  : null }
+
+
         
     </nav>
   )

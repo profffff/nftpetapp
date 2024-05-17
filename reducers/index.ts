@@ -1,3 +1,4 @@
+
 import { TransactionReceipt } from 'viem'
 
 interface IReducer {
@@ -14,11 +15,12 @@ interface IReducer {
     isReceiptSuccess: boolean
     receiptError: string | null
     receiptData: TransactionReceipt | null
+    isWalletConnected: boolean
 }
 
 export const useMintReducer = (
     state: IReducer,
-    action: Partial<IReducer> | undefined
+    action: Partial<IReducer> | undefined 
 ) => {
     if (action === undefined) {
         return {
@@ -35,8 +37,12 @@ export const useMintReducer = (
             isReceiptSuccess: false,
             receiptError: null,
             receiptData: null,
+            isWalletConnected: false
         }
-    } else {
+    } 
+
+        else
+    {
         const newState = { ...state, ...action }
         return {
             ...newState,

@@ -1,11 +1,13 @@
-
 import { useWeb3Modal } from '@web3modal/wagmi/react'
 
 
+
 const ConnectButton = () => {
+
+
   // 4. Use modal hook
   const { open } = useWeb3Modal()
-
+ // dispatch({ isWalletConnected: true })
   return (
     <>
     <div>
@@ -18,6 +20,7 @@ const ConnectButton = () => {
       </div>
     </>
   )
+
 }
 
 export default ConnectButton
