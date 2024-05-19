@@ -1,12 +1,15 @@
 import { useWeb3Modal } from '@web3modal/wagmi/react'
 
-
+import { useAccount } from 'wagmi'
 
 const ConnectButton = () => {
 
 
   // 4. Use modal hook
   const { open } = useWeb3Modal()
+
+  const { isConnected } = useAccount()
+  
  // dispatch({ isWalletConnected: true })
   return (
     <>
@@ -16,7 +19,7 @@ const ConnectButton = () => {
       </button>
       </div>
       <div>
-      <button className="button" onClick={() => open({ view: 'Networks' })}>CHOOSE NETWORK</button>
+      <button className="button" disabled={!isConnected} onClick={() => open({ view: 'Networks' })}>CHOOSE NETWORK</button>
       </div>
     </>
   )

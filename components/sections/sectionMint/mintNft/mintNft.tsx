@@ -9,7 +9,8 @@ import {
 } from 'wagmi'
 
 import {  InfoMessage,
-  InfoMessageWrapper, } from '@/components'
+  InfoMessageWrapper,
+ } from '@/components'
 
 // Hooks
 import { useIsWrongNetwork, useMint } from '@/hooks'
@@ -22,7 +23,9 @@ const mintNft = () => {
   const [isModalOpened, setIsModalOpened] = useState(false)
   const { state, dispatch, mintNFT } = useMint()
 
-  const [inputValue, setInputValue] = useState('1')
+  const [showNFTCollectionModal, setShowNFTCollectionModal] = useState(false)
+
+
 
 
 
@@ -54,7 +57,7 @@ const mintNft = () => {
     <form onSubmit={submit}>
   
       <button className="button"
-        disabled={isPending ||
+        disabled={!isConnected || isPending ||
           state.isLoading
         } 
         type="submit"

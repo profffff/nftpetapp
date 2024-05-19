@@ -25,8 +25,11 @@ const shortenHexString = (hexString: string | undefined) => {
  * @param {string} ipfsString - The input IPFS URL to be converted to HTTPS.
  * @returns {string} The converted HTTPS URL.
  */
+
+//dweb.link - gateway works , ipfs.io - not,  cloudflare-ipfs.com - not tried
+//
 const ipfsToHttps = (ipfsString: string): string => {
-    return ipfsString.replace('ipfs://', 'https://ipfs.io/ipfs/')
+    return ipfsString.replace('ipfs://', 'https://dweb.link/ipfs/')
 }
 
 /**

@@ -12,7 +12,7 @@ export interface IRefPhaserGame
 
 interface IProps
 {
-    currentActiveScene?: (scene_instance: Phaser.Scene) => void
+    currentActiveScene?: (scene_instance: Phaser.Scene) => void;
 }
 
 export const PhaserGame = forwardRef<IRefPhaserGame, IProps>(function PhaserGame({ currentActiveScene }, ref)
@@ -68,6 +68,8 @@ export const PhaserGame = forwardRef<IRefPhaserGame, IProps>(function PhaserGame
                 ref.current = { game: game.current, scene: scene_instance };
             }
             
+
+        
         });
         return () =>
         {
@@ -80,3 +82,6 @@ export const PhaserGame = forwardRef<IRefPhaserGame, IProps>(function PhaserGame
     );
 
 });
+
+export { PhaserGame as default  };
+export type { IRefPhaserGame as interface};

@@ -1,18 +1,21 @@
 import { useRef, useState } from 'react'
-import { useAccount } from 'wagmi'
+
 import clsx from 'clsx'
+
+import type { Dispatch, SetStateAction } from 'react'
 
 // Hooks
 
 // Components
-import { ConnectButton } from '@/components'
+import { ConnectButton,  NFTCollectionModal,
+} from '@/components'
 
 
 const Nav = () => {
     const navRef = useRef<HTMLElement>(null)
-    const { isConnected } = useAccount()
+   
 
-    const [isModalOpened, setIsModalOpened] = useState(false)
+    
 
 
     return (
@@ -21,9 +24,12 @@ const Nav = () => {
         >
             <div>
                 
-              <ConnectButton />
+              <ConnectButton/>
 
+        
+       
             </div>
+
 
         </nav>
     )

@@ -1,21 +1,25 @@
 import { useRef, useState } from 'react';
 import { createWeb3Modal } from '@web3modal/wagmi/react'
 
-import { http, createConfig, WagmiProvider } from 'wagmi'
+import { http, createConfig, WagmiProvider, useAccount } from 'wagmi'
 import { mainnet } from 'wagmi/chains'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { defineChain } from 'viem'
 import { walletConnect, injected, coinbaseWallet } from 'wagmi/connectors'
 
 import { IRefPhaserGame, PhaserGame } from '../game/PhaserGame';
-import { MainMenu } from '../game/scenes/MainMenu';
+import { MainMenu } from '../scenes/MainMenuScene/MainMenu';
+
+import type { AppProps } from "next/app";
 
 
 // Components
 import {
     NavSection,
     MintNftSection,
+    NFTCollectionSection
 } from '@/components'
+import NFTCollectionScene from '../scenes/NFTCollectionScene';
 
 // Hooks
 //import { useIsMounted } from '@/hooks'
@@ -100,6 +104,7 @@ const metadata = {
   })
 
 
+  let nftCollectionScene: Phaser.Scene;
 
 function App()
 {
@@ -109,13 +114,14 @@ function App()
     //  References to the PhaserGame component (game and scene are exposed)
     const phaserRef = useRef<IRefPhaserGame | null>(null);
     const [spritePosition, setSpritePosition] = useState({ x: 0, y: 0 });
-
     const changeScene = () => {
 
+        
+        nftCollectionScene = this.game.scene.getScene('NFTCollectionScene')
+       
         if(phaserRef.current)
         {     
             const scene = phaserRef.current.scene as MainMenu;
-            
             if (scene)
             {
                 scene.changeScene();
@@ -142,6 +148,22 @@ function App()
         }
 
     }
+
+    function Example() {
+        
+        alert('here')
+        
+          const { address } = useAccount()
+          alert(address)
+        
+      
+        return (
+          <div>
+           
+          </div>
+        );
+      }
+
 
     const addSprite = () => {
 
@@ -202,6 +224,7 @@ function App()
                                 <button className="button" onClick={addSprite}>Add New Sprite</button>
                             </div>
                             <NavSection />
+                            <NFTCollectionSection currentActiveScene={phaserRef.current} targetScene={nftCollectionScene}/>
                             <MintNftSection />
                         </div>
                     </div>
