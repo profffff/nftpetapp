@@ -43,42 +43,31 @@ function NFTCollection({currentActiveScene}) {
     if (totalCount) {
         setNftData(data?.data?.ownedNfts?.[totalCount - 1] || null) //last owned nft
     }
-    
-    
-    // console.log(data?.data)
-    // console.log(data?.data?.ownedNfts?.[totalCount - 1]) 
+  }, [data])
 
-
-}, [data])
-
-  
-  
-  
-  // Check if nftData is an array and log the first element
-  
-
-  //console.log(data)
-//  alert(data.data)
-
-    //const phaserRef = useRef<IRefPhaserGame | null>(null);
-    
-    const z = () => {
+   
+    const loadCollectionScene = () => {
 
       if(currentActiveScene) 
         {
-          const scene = currentActiveScene.scene as MainMenu;
-          if (scene) 
+          const scene = currentActiveScene.scene;
+          if (scene.sys.config.key === 'MainMenu') 
             {
-      
-              // (data?.data?.ownedNfts || []).map((item: INFT) => {
+              if (isLoading || isFetching ) {
+                  //loading...
+              }
+              else {
                 const nftArray = data?.data?.ownedNfts.map((item) => ({
-                  tokenId: item.id.tokenId,
+                  tokenId: item.id?.tokenId || '',
                   image: ipfsToHttps(item.metadata?.image || ''),
-                  name: item.metadata?.name,
+                  name: item.metadata?.name || '',
                 }));
-
                  scene.loadNFTCollectionScene(nftArray); //from menu
-              // });       
+              }
+            }
+          else if (scene.sys.config.key === 'NFTCollectionScene') 
+            {
+                scene.changeSceneToMainMenu();
             }
           }
     }
@@ -86,13 +75,13 @@ function NFTCollection({currentActiveScene}) {
 
     const handleClick = () => {
       setIsModalOpened(!isModalOpened);
-      z();
+      loadCollectionScene();
     };
 
 
     return (
       <div> 
-         <button  className="button" disabled={!isConnected}
+         <button  className="button" disabled={!isConnected || isLoading || isFetching}
           onClick={handleClick}
          >NFT COLLECTION</button> 
       </div>

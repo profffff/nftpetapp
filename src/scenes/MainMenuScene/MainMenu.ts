@@ -11,6 +11,7 @@ export class MainMenu extends Scene
     title: GameObjects.Text;
     logoTween: Phaser.Tweens.Tween | null;
     text1: GameObjects.Text;
+    playerImage: string;
 
 
 
@@ -21,15 +22,25 @@ export class MainMenu extends Scene
         
     }
 
+    init(choosenPlayerImage: string)   
+     {
+        this.playerImage = choosenPlayerImage;
+     }
+
     preload()
     {
+
     }
+
+
     create ()
     {   
        
 
-
-        this.background = this.add.image(512, 384, 'background');
+        if (this.textures.exists(this.playerImage))
+            this.background = this.add.image(512, 384, this.playerImage);
+        else 
+            this.background = this.add.image(512, 384, 'background');
 
         this.logo = this.add.image(512, 300, 'logo').setDepth(100);
 
@@ -39,7 +50,7 @@ export class MainMenu extends Scene
             align: 'center'
         }).setOrigin(0.5).setDepth(100);
 
-        this.text1 = this.add.text(0, 0, '.                 dd');
+        this.text1 = this.add.text(0, 0, 'My game ');
 
         EventBus.emit('current-scene-ready', this);
    

@@ -1,23 +1,5 @@
-
-
 import { Scene } from 'phaser';
 import { EventBus } from '../../game/EventBus';
-import { useAccount } from 'wagmi'
-import { ScrollablePanel } from 'phaser3-rex-plugins/templates/ui/ui-components.js';
-
-
-
-import React, { useState, useEffect } from 'react';
-
-import {useTestHook } from '@/hooks'
-
-// Types
-import { INFT } from '@/types'
-
-import { useQuery } from '@tanstack/react-query'
-
-// Requests
-import { getNFTs } from '@/requests'
 
 //plugin
 import RexUIPlugin from 'phaser3-rex-plugins/templates/ui/ui-plugin.js';
@@ -64,6 +46,8 @@ export class NFTCollectionScene extends Scene
         }
     }
 
+    
+
     create ()
     {   
         console.log('here');
@@ -71,13 +55,17 @@ export class NFTCollectionScene extends Scene
 
         var items = this.nftArray;
 
-        
-       // this.NFTimage = this.add.image(512, 300, 'logoz').setDepth(100);
-
-        this.text1 = this.add.text(0, 0, 'Only on Nft col');
+        this.text1 = this.add.text(5, 5, 
+          ['Your NFT collection:',
+          'To select a character',
+          'click on it']
+             );
         
          EventBus.emit('current-scene-ready', this);
 
+
+
+        
         var panel = this.rexUI.add.scrollablePanel({
             x: 500, y: 390,
             width: 600, height: 760,
@@ -85,7 +73,7 @@ export class NFTCollectionScene extends Scene
             scrollMode: 'y',
 
             panel: {
-            child:  CreatePanel(this, items) //{ scene: this, nftArray: this.nftArray }),
+            child:  CreatePanel(this, items) 
             },
 
             slider: {
@@ -119,36 +107,35 @@ export class NFTCollectionScene extends Scene
             .on('child.click', function (child) {
                 // child : Label from CreateItem()  
                 print.text += `Click ${child.name}`;
-                console.log(`Click ${child.name}`);
+                let choosenPlayerImage = child.name;
+                console.log(`Click ${choosenPlayerImage}`); 
+               
+                this.scene.scene.start('MainMenu', choosenPlayerImage);
+                          
                 if (child.isInTouching('actions[0]')) {
                     print.text += `'s action button`;
                 }
                 print.text += '\n';
-            })
+            })      
     }
 
-    update() {
-        
-     }
-        }
-    
-       
     
 
-    var CreatePanel = function (scene, items) {//(params: { scene: Phaser.Scene; nftArray: { tokenId: string | undefined; image: string | undefined; name: string | undefined }[] }) { 
-        // var panel = scene.rexUI.add.fixWidthSizer({ //how many items the a panel
-        //     orientation: 'x',
-        //     space: {
-        //         left: 0,
-        //         right: 0,
-        //         top: 0,
-        //         bottom: 0,
-        //         item: 0,
-        //         line: 0, //space between lines
-        //         draggable: false
-        //     },
-        // })
+        update() {
+   
+                 }
+
+
+        changeSceneToMainMenu()
+        {
+                this.scene.start('MainMenu');
+        }   
+    }
+    
         
+    
+
+    var CreatePanel = function (scene, items) {
         var panel = scene.rexUI.add.fixWidthSizer({
             // orientation: 'y',
             // space: { left: 20, right: 20, top: 20, bottom: 20, item: 20 },
@@ -157,21 +144,9 @@ export class NFTCollectionScene extends Scene
             space: { left: 12, right: 12, top: 12, bottom: 12, item: 12 },
             // align: 'justify-right'
         })
-        // .add( scene.rexUI.add.label({ //createHeader(scene, data), // child
-        //         orientation: 'y',
-        //         text: scene.add.text(10, 10, 'Your NFT collection:'),
-        //     })
-        // )
-
         
 
-        //if (test_items?.length) {
-        // panel 
-        // .add(
-        //     createTable(scene, test_items,  2), // child
-        //     { expand: true }
-        // )
-    //}
+        
         if (items?.length) {
             for (var i = 0; i < items.length; i++) {
                 panel
@@ -179,7 +154,8 @@ export class NFTCollectionScene extends Scene
                         CreateItem(scene, 
                             items[i].tokenId, 
                             i, 
-                            items[i].name),
+                            items[i].name,
+                            items[i].image),
                         { expand: true }
                     )
             }   
@@ -190,56 +166,38 @@ export class NFTCollectionScene extends Scene
                         CreateItem(scene, 
                             "No token", 
                             "No image", 
+                            "No name",
                             "No name"),
                         { expand: true }
                     )
         }
-        
-       // panel.addBackground(scene.add.image(512, 300, 'logoz').setDepth(100))
-       // this.NFTimage = scene.add.image(512, 300, 'logoz').setDepth(100);
-       // panel.add(this.NFTimage)
        
         return panel;
     }
     
     
-    var CreateItem = function (scene, tokenId, curImage, name) {
+    var CreateItem = function (scene, tokenId, curImage, name, image) {
        
         let tokenIdparse = tokenId.slice(-8); //because of too long
         let tokenIdparsedOutput = `id#..${tokenIdparse}`;
-        
+       
         var iconSize = (true === true) ? 15 : 200;
         var item = scene.rexUI.add.dialog({
             width: 100,
             height: 100,
-            
            // space: { left: 1, right: 1, top: 1, bottom: 1 },
-    
+
             background: scene.rexUI.add.roundRectangle({
                 radius: 10,
                 color: COLOR_MAIN,
-               // icon: scene.rexUI.setTexture('logoz')
                 icon: scene.rexUI.add.roundRectangle(0, 0, iconSize, iconSize, 5, COLOR_LIGHT),
             }),
 
-            //image: scene.rexUI.roundRectangle(scene.add.image(300, 300, 'logoz')),
-
-          
-         //   scene.add.image(512, 300, 'logoz').setDepth(100);
-           
-
-           // background: createIcon(scene, name, iconSize, iconSize),
-    
             title: scene.rexUI.add.label({
                 space: { left: 10, right: 10, top: 10, bottom: 10 },
                 text: scene.add.text(0, 0, name),
                 
             }),
-
-            // text: scene.rexUI.add.textBox({
-            //     x: 400, y: 500,
-    
-            // }),
             
             content: scene.rexUI.add.label({
                 space: { left: 10, right: 10, top: 10, bottom: 10 },
@@ -257,7 +215,9 @@ export class NFTCollectionScene extends Scene
                 }
                 ),
             ],
-    
+            
+            name: `nft_${curImage}`, //we can load image from cache
+
             proportion: {
                 content: 2,
             },
@@ -270,6 +230,9 @@ export class NFTCollectionScene extends Scene
         })
         return item;
     }
+
+
+   
 
 
    
