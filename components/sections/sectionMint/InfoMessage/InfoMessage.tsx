@@ -18,7 +18,8 @@ interface IProps {
     mintedMetadata: IMintedMetadata | null | undefined
     mintedQuantity: string | undefined
     isEnoughBalanceToMint: boolean,
-    isWalletConnected: boolean
+    isWalletConnected: boolean,
+    isNoTokens: boolean
 }
 
 const InfoMessage = ({
@@ -36,6 +37,7 @@ const InfoMessage = ({
     mintedQuantity,
     isEnoughBalanceToMint,
     isWalletConnected,
+    isNoTokens, 
 }: IProps) => {
     const continueMintingMessage =
         mintableQuantity === 0
@@ -58,6 +60,10 @@ const InfoMessage = ({
                 {continueMintingMessage}
             </>
         )
+    }
+
+    if (isNoTokens) {
+        return <>Out of NFT! Wait fot the new drop or contact the admin </>
     }
 
     if (prepareError) {

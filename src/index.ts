@@ -10,4 +10,3 @@ export { default as MainMenuScene } from '@/src/scenes/MainMenuScene/MainMenu'
 export { default as NFTCollectionScene } from '@/src/scenes/NFTCollectionScene/NFTCollectionScene'
 export { default as PreloaderScene } from '@/src/scenes/PreloaderScene/Preloader'
 
-export {PhaserConfig} from '@/src/game/main'

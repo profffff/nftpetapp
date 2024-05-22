@@ -32,7 +32,7 @@ export class Preloader extends Scene
         //  Load the assets for the game - Replace with your own assets
         this.load.setPath('assets');
 
-        this.load.image('logo', 'logo.png');
+        this.load.image('nft_default', '/art/pet/petImage/petDefault.png');
         this.load.image('star', 'star.png');
     }
 

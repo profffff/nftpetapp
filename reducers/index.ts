@@ -15,7 +15,8 @@ interface IReducer {
     isReceiptSuccess: boolean
     receiptError: string | null
     receiptData: TransactionReceipt | null
-    isWalletConnected: boolean
+    isWalletConnected: boolean,
+    isNoTokens: boolean
 }
 
 export const useMintReducer = (
@@ -37,7 +38,8 @@ export const useMintReducer = (
             isReceiptSuccess: false,
             receiptError: null,
             receiptData: null,
-            isWalletConnected: false
+            isWalletConnected: false,
+            isNoTokens: false
         }
     } 
 
@@ -51,6 +53,7 @@ export const useMintReducer = (
                 newState.isWriteLoading ||
                 newState.isReceiptLoading,
             isError:
+                newState.isNoTokens ||
                 newState.customError ||
                 newState.prepareError ||
                 newState.writeError ||

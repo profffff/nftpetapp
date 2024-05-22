@@ -1,4 +1,4 @@
-import { GameObjects, Scene } from 'phaser';
+import { GameObjects, Scene, Actions } from 'phaser';
 
 import { EventBus } from '../../game/EventBus';
 
@@ -32,19 +32,37 @@ export class MainMenu extends Scene
 
     }
 
+    
 
     create ()
     {   
-       
+        if (!this.textures.exists(this.playerImage))
+            this.playerImage = 'nft_default';
+        
+        this.background = this.add.image(512, 444, this.playerImage).setScale(0.55); //.setRotation(0.2)
 
-        if (this.textures.exists(this.playerImage))
-            this.background = this.add.image(512, 384, this.playerImage);
-        else 
-            this.background = this.add.image(512, 384, 'background');
+        //this.moveLogo(0, 0);
 
-        this.logo = this.add.image(512, 300, 'logo').setDepth(100);
+        // this.logoTween = this.tweens.add({
+        //     targets: this.logo,
+        //     x: { value: 750, duration: 3000, ease: 'Back.easeInOut' },
+        //     y: { value: 80, duration: 1500, ease: 'Sine.easeOut' },
+        //     yoyo: true,
+        //     repeat: -1,
+        //     onUpdate: () => {
+        //         if (vueCallback)
+        //         {
+        //             vueCallback({
+        //                 x: Math.floor(this.logo.x),
+        //                 y: Math.floor(this.logo.y)
+        //             });
+        //         }
+        //     }
+        // });
 
-        this.title = this.add.text(512, 460, 'Main Menu', {
+
+
+        this.title = this.add.text(512, 40, 'Main Menu', {
             fontFamily: 'Arial Black', fontSize: 38, color: '#ffffff',
             stroke: '#000000', strokeThickness: 8,
             align: 'center'
@@ -54,6 +72,11 @@ export class MainMenu extends Scene
 
         EventBus.emit('current-scene-ready', this);
    
+    }
+
+    update() 
+    {
+        
     }
     
     changeScene ()
@@ -95,17 +118,17 @@ export class MainMenu extends Scene
         else
         {
             this.logoTween = this.tweens.add({
-                targets: this.logo,
-                x: { value: 750, duration: 3000, ease: 'Back.easeInOut' },
-                y: { value: 80, duration: 1500, ease: 'Sine.easeOut' },
+                targets: this.background,
+                x: { value: [290, 710], duration: 1500, ease: 'Sine.easeOut' },
+                y: { value: 310, duration: 720, ease: 'Sine.easeOut' },
                 yoyo: true,
                 repeat: -1,
                 onUpdate: () => {
                     if (vueCallback)
                     {
                         vueCallback({
-                            x: Math.floor(this.logo.x),
-                            y: Math.floor(this.logo.y)
+                            x: Math.floor(this.background.x),
+                            y: Math.floor(this.background.y)
                         });
                     }
                 }

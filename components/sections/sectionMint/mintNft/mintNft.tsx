@@ -87,6 +87,7 @@ const mintNft = () => {
                         isActionRequired={state.isWriteLoading}
                     >
                     <InfoMessage
+                            isNoTokens={state.isNoTokens}
                             isPrepareLoading={state.isPrepareLoading}
                             prepareError={state.prepareError}
                             isWriteLoading={state.isWriteLoading}

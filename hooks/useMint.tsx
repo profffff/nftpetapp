@@ -1,6 +1,6 @@
 import { useReducer } from 'react'
 import { BaseError, parseEther, parseUnits } from 'viem'
-import { useConfig } from 'wagmi'
+import { useConfig, useReadContract } from 'wagmi'
 import {
     simulateContract,
     writeContract,
@@ -16,7 +16,6 @@ import { useMintReducer } from '@/reducers'
 // Utilities
 import { toErrorWithMessage } from '@/utils'
 
-const pricePerNFT = +process.env.NEXT_PUBLIC_NFT_PRICE! as unknown as number
 
 const useMint = () => {
     const config = useConfig()
@@ -34,7 +33,8 @@ const useMint = () => {
         isReceiptSuccess: false,
         receiptError: null,
         receiptData: null,
-        isWalletConnected: false
+        isWalletConnected: false,
+        isNoTokens: false
     })
 
     const mintNFT = async (
@@ -48,6 +48,23 @@ const useMint = () => {
 
         try {
             
+            //gas applies to Legacy Transactions
+            const totalSupply = await simulateContract(config, { 
+                ...contractConfig,
+                functionName: 'totalSupply',
+            })
+
+            const totalMinted = await simulateContract(config, {
+                ...contractConfig,
+                functionName: 'totalMinted',
+            })
+
+
+            if (totalSupply.result === totalMinted.result) {
+                dispatch({ isNoTokens: true })
+                throw new BaseError('noTokensAvailable'); 
+            }
+
             prepareLoading = true
             dispatch({ isPrepareLoading: true })
         

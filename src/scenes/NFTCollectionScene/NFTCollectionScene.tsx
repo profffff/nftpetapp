@@ -38,8 +38,6 @@ export class NFTCollectionScene extends Scene
     preload ()
     {   
         var items = this.nftArray;
-        console.log(items);
-        console.log(items[1].image)
        
         for (var i = 0; i < items.length; i++) {
            this.load.image(`nft_${i}`, items[i].image);
@@ -164,9 +162,9 @@ export class NFTCollectionScene extends Scene
             panel
                     .add(
                         CreateItem(scene, 
-                            "No token", 
-                            "No image", 
-                            "No name",
+                            " ", 
+                            "default", 
+                            "Default",
                             "No name"),
                         { expand: true }
                     )

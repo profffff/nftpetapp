@@ -13,6 +13,8 @@ export const getNFTs = async (address: string | undefined) => {
     return res
 }
 
+
+
 export const getNFTMetadata = async (tokenId?: number | undefined) => {
     if (tokenId) {
         const res = await axios.get(

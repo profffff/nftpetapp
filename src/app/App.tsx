@@ -149,21 +149,6 @@ function App()
 
     }
 
-    function Example() {
-        
-        alert('here')
-        
-          const { address } = useAccount()
-          alert(address)
-        
-      
-        return (
-          <div>
-           
-          </div>
-        );
-      }
-
 
     const addSprite = () => {
 
@@ -224,7 +209,7 @@ function App()
                                 <button className="button" onClick={addSprite}>Add New Sprite</button>
                             </div>
                             <NavSection />
-                            <NFTCollectionSection currentActiveScene={phaserRef.current} targetScene={nftCollectionScene}/>
+                            <NFTCollectionSection currentActiveScene={phaserRef.current} />
                             <MintNftSection />
                         </div>
                     </div>
