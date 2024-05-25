@@ -1,7 +1,6 @@
 import { Boot } from '../scenes/BootScene/Boot';
 import { GameOver } from '../scenes/GameOverScene/GameOver';
-import { Game as MainGame } from '../scenes/GameScene/Game';
-import { MainMenu } from '../scenes/MainMenuScene/MainMenu';
+import { MainMenu } from '../scenes/GameScene/Game';
 import { AUTO, Game } from 'phaser';
 import { Preloader } from '../scenes/PreloaderScene/Preloader';
 import { NFTCollectionScene } from '../scenes/NFTCollectionScene/NFTCollectionScene';
@@ -22,7 +21,6 @@ const config: Phaser.Types.Core.GameConfig = {
         Boot,
         Preloader,
         MainMenu,
-        MainGame,
         GameOver,
         NFTCollectionScene
     ],

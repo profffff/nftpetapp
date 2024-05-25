@@ -24,7 +24,7 @@ export const gameSettings: GameSettings = {
     minWinMood: 8,
     maxNumActions: 5,
     maxMood: 10,
-    probIncMood: 40
+    probIncMood: 40,
 }
 
 

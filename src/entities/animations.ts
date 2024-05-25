@@ -3,6 +3,7 @@ import {  } from "../values/constants/gameConstants";
 export class Animations  {
     private textureKey: string;
     private petAnimation: Phaser.Tweens.Tween | null;
+    private petInGoodMood: Phaser.Tweens.Tween | null;
     private scene:  Phaser.Scene;
     private x: number;
     private y: number;
@@ -10,6 +11,8 @@ export class Animations  {
     private petWantAnimation:  false | Phaser.Animations.Animation;
     private wantText: Phaser.GameObjects.BitmapText  | null = null;
     private  wantThink1Sprite: Phaser.GameObjects.Sprite;
+    private petMoodSad: Phaser.GameObjects.Sprite  | null = null;
+    private petMoodAngry: Phaser.GameObjects.Sprite  | null = null;
    // mood: number;
 
     constructor(scene: Phaser.Scene, posX: number, posY: number, petImage: Phaser.GameObjects.Sprite) {
@@ -20,13 +23,20 @@ export class Animations  {
     }
 
     public disableAllAnimations() {
-        console.log('disableAllAnimations')
         if (this.petAnimation?.isPlaying ) {
             this.petAnimation.stop()
-            this.returnToOriginal();
-            
+            this.returnToOriginal();  
+        }          
+        if (this.petMoodAngry) {
+            this.petMoodAngry.destroy();
         }
-               
+        if (this.petMoodSad) {
+            this.petMoodSad.destroy();
+        }
+        if (this.petInGoodMood?.isPlaying) {
+            this.petInGoodMood.stop()
+            this.returnToOriginal();  
+        }     
     }
 
     private returnToOriginal() 
@@ -39,6 +49,21 @@ export class Animations  {
         });
     }
 
+    petInGoodMoodAnimation() {
+        this.petInGoodMood = this.scene.tweens.add({
+            targets: this.petImage,
+            x: { value: [400, 600], duration: 2500, ease: 'Linear' },
+            yoyo: true,
+            repeat: -1,
+            onRepeat: () => {
+                this.petImage.setFlipX(true);
+            },
+            onYoyo: () => {
+                this.petImage.setFlipX(false);
+            },
+        });
+        this.petInGoodMood.play();
+    }
 
     public petHappyAnimation () 
     {     
@@ -93,13 +118,13 @@ export class Animations  {
 
         
         this.wantThink1Sprite = this.scene
-            .add.sprite(x, y, 'wantThink1')
+            .add.sprite(x, y, 'wantThink1').setDepth(20)
             .play('want')
 
         if (this.wantText)
             this.wantText.destroy()
         
-        this.wantText = this.scene.add.bitmapText(x - 45, y - 55, 'digital-font', 'I need ' + action.slice(0,-6)).setScale(0.7);
+        this.wantText = this.scene.add.bitmapText(x - 45, y - 55, 'digital-font', 'I need ' + action.slice(0,-6)).setScale(0.7).setDepth(21);
         this.wantText.setTint(0xFF21FF); //0xFE0101 red
             
     }
@@ -109,7 +134,7 @@ export class Animations  {
             this.wantThink1Sprite.stop();
             this.wantText.destroy();
             this.wantThink1Sprite.destroy();
-        }
+        }    
     }
     
     public isPlayingWantsAnimation(): boolean {
@@ -120,21 +145,44 @@ export class Animations  {
     }
 
     public showWrongButtonBackground() {
-    
-        const wrongBack = this.scene.add.sprite(0, 0, 'wrongButtonBackground').setOrigin(0,0);
-        
+        const wrongBack = this.scene.add.sprite(0, 0, 'wrongButtonBackground').setOrigin(0,0).setDepth(1000);      
         this.scene.add.tween({
             targets: wrongBack,
-            duration: 800,
+            duration: 4500,
             alpha: 0,
-            yoyo: true,
-            repeat: 1,
+            repeat: 0,
             onComplete: () => {
                 wrongBack.destroy()
             }
         });
-
     }
+
+    public showBackground(key: string, animationDuration: number) {
+        const crtBackground = this.scene.add.sprite(0, 0, key).setOrigin(0,0).setDepth(1000); 
+        this.scene.add.tween({
+            targets: crtBackground,
+            duration: 2000, //+ animationDuration * (key === 'sleepBackground' ? 1 : 0), bug fix
+            alpha: 0,
+            repeat: 0,
+            onComplete: () => {
+                crtBackground.destroy()
+            }
+        });
+    }
+
+    public setAngryMood() {
+        this.scene.time.delayedCall(0, () => {
+            this.petMoodAngry = this.scene.add.sprite(this.x, this.y, 'angryMouth').setDepth(100);
+        }, [], this);  
+    }
+
+    public setSadMood() {
+        this.scene.time.delayedCall(0, () => {
+            this.petMoodSad = this.scene.add.sprite(this.x, this.y, 'sadMouth').setDepth(100);
+        }, [], this);   
+    }
+
+   
 
 
 

@@ -19,7 +19,7 @@ import {IRefPhaserGame, MainMenuScene, NFTCollectionScene} from '@/src'
 
 // Types
 import { INFT } from '@/types'
-import { MainMenu } from '@/src/scenes/MainMenuScene'
+import { MainMenu } from '@/src/scenes/GameScene'
 
 
 

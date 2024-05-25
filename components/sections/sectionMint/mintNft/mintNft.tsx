@@ -75,7 +75,6 @@ const mintNft = () => {
       
     </form>
 
-    {isConnected ? (
     <InfoMessageWrapper
                         isLoading={
                             state.isPrepareLoading ||
@@ -94,23 +93,11 @@ const mintNft = () => {
                             isReceiptLoading={state.isReceiptLoading}
                             receiptError={state.receiptError}
                             transactionError={state.writeError}
-                            isWalletConnected={true} 
+                            isWalletConnected={isConnected ? true : false} 
                         />
 
                     </InfoMessageWrapper>
-  ) 
-  : isDisconnected ?
-  <InfoMessageWrapper>
-  <InfoMessage 
-  isWalletConnected={false} 
-  />
-</InfoMessageWrapper>
-  
-  
-  : null }
-
-
-        
+      
     </nav>
   )
 }

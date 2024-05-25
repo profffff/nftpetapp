@@ -81,6 +81,13 @@ export const PhaserGame = forwardRef<IRefPhaserGame, IProps>(function PhaserGame
         <div id="game-container"></div>
     );
 
+
+
+
+
+    
+
+
 });
 
 export { PhaserGame as default  };

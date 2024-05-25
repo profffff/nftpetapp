@@ -19,7 +19,17 @@ export class Preloader extends Scene
         this.load.setPath('assets');
         this.load.image('nft_default', '/art/pet/petImage/petDefault.png');
         this.load.image('star', 'star.png');
+    
+
         this.load.image('wrongButtonBackground', '/art/window/wrongButtonBackground/WrgBtnBack.png');
+        this.load.image('sleepBackground', '/art/window/sleepBackground/sleepBackground.png');
+        this.load.image('increaseMoodBackground', '/art/window/increaseMoodBackground/increaseMoodBackground.png');
+        this.load.image('aidBackground', '/art/window/aidButtonBackground/aidBackground.png');
+
+        this.load.image('angryMouth', 'art/pet/petMood/Angry/angryMouth.png')
+        this.load.image('Tear', 'art/pet/petMood/Sad/Tear.png')
+        this.load.image('sadMouth', 'art/pet/petMood/Sad/sadMouth.png')
+
 
         this.load.image('eatIcon', '/art/button/buttonsImage/eatIcon.png');
         this.load.image('medicineIcon', '/art/button/buttonsImage/medicineIcon.png');

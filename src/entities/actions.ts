@@ -12,26 +12,25 @@ import Timer from '../components/timer/gameTimer'
 
 import  {Pet} from '../entities/pet'
 
+import { EventBus } from '../game/EventBus';
+
 
 
 
 class Actions {
     private currentAction: string | null = null;
+    private currentDelay: number | null = null;
+
     private selectedAction: string | null = null;
     private timer: Timer | null = null;
-    private isCorrectButton: boolean = true;
+
+    private isCorrectButton: boolean = true; 
+    private backgroundManager: string | null = null;
+  
+
     private pet?: Pet;
 
-    private actionsMap = {
-    'eatAction': this.eatAction.bind(this),
-    'drinkAction': this.drinkAction.bind(this),
-    'toiletAction': this.toiletAction.bind(this),
-    'playAction': this.playAction.bind(this),
-    'medicineAction': this.medicineAction.bind(this),
-    'sleepAction': this.sleepAction.bind(this),
-  }
 
-    
     constructor(selectedAction: string, timer: Timer) {
         this.selectedAction = selectedAction;
         this.timer = timer;
@@ -43,11 +42,17 @@ class Actions {
         return this.isCorrectButton;
      }
 
+     public getBackgroundManager(): string {
+        return this.backgroundManager;
+     }
+
     private checkAction() {
         const crtAction = petStartAttributes.currentAction
         console.log( "crt", crtAction) 
         
         if (crtAction) {
+            this.backgroundManager = null;
+
             if (this.timer.timeEvent.paused === false ) {
                     this.timer.scaleTweenWarning()   
             }
@@ -61,8 +66,6 @@ class Actions {
              //   else {
                     this.isCorrectButton = true;
                     this[crtAction](); //doesn't work properly
-                 //  const actionFunction = this.actionsMap[crtAction];
-                  //  actionFunction(); 
                     this.newAction();     
              //   }
             }   
@@ -78,17 +81,21 @@ class Actions {
     }
 
     private newAction() {
-        const generatedNextAction = this.generateRandomAction()
-        this.currentAction = generatedNextAction
-        petStartAttributes.currentAction = generatedNextAction
-        const generatedDelay = this.generateRandomTimeBeforeAction()
-        this.timer.start(generatedDelay)
+        this.currentAction = this.generateRandomAction()
+        petStartAttributes.currentAction = this.currentAction
+        this.currentDelay = this.generateRandomTimeBeforeAction()
+        this.timer.start(this.currentDelay)
     }
 
     public getCrtAction(): string {
         console.log(this.currentAction)
         return this.currentAction
     }
+
+    public getCrtDelay(): number {
+        return this.currentDelay;
+    }
+
 
     private eatAction(): void {
         this.increaseMood()
@@ -110,10 +117,12 @@ class Actions {
     }
 
     private medicineAction(): void {
+        this.backgroundManager = 'aidBackground'
         console.log("medicineAction");
     }
 
     private sleepAction(): void {
+        this.backgroundManager = 'sleepBackground'
         console.log("sleepAction");
     }
 
@@ -126,6 +135,7 @@ class Actions {
         if (random_num < gameSettings.probIncMood) {
             if (petStartAttributes.mood < gameSettings.maxMood) {
                 ++petStartAttributes.mood;
+                this.backgroundManager = 'increaseMoodBackground'
             }
 
         }
@@ -134,7 +144,16 @@ class Actions {
     private decreaseMood() {
         console.log('moodDecreased')
         --petStartAttributes.mood;
+        this.isGameOver();
     }
+
+    private isGameOver(): void {
+         if (petStartAttributes.mood === 0)
+         {
+            EventBus.emit('gameOver')
+         }
+    }
+
 
     private isGameFinished(): boolean {
         

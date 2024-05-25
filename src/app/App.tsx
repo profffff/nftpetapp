@@ -8,7 +8,7 @@ import { defineChain } from 'viem'
 import { walletConnect, injected, coinbaseWallet } from 'wagmi/connectors'
 
 import { IRefPhaserGame, PhaserGame } from '../game/PhaserGame';
-import { MainMenu } from '../scenes/MainMenuScene/MainMenu';
+import { MainMenu } from '../scenes/GameScene/Game';
 
 import type { AppProps } from "next/app";
 
@@ -108,29 +108,8 @@ const metadata = {
 
 function App()
 {
-    // The sprite can only be moved in the MainMenu Scene
     const [canMoveSprite, setCanMoveSprite] = useState(true);
-
-    //  References to the PhaserGame component (game and scene are exposed)
     const phaserRef = useRef<IRefPhaserGame | null>(null);
-    const [spritePosition, setSpritePosition] = useState({ x: 0, y: 0 });
-    const changeScene = () => {
-
-        
-        nftCollectionScene = this.game.scene.getScene('NFTCollectionScene')
-       
-        if(phaserRef.current)
-        {     
-            const scene = phaserRef.current.scene as MainMenu;
-            if (scene)
-            {
-                scene.changeScene();
-            }
-        }
-    }
-
-
-
 
     const addSprite = () => {
 
@@ -161,9 +140,7 @@ function App()
     }
 
     const currentScene = (scene: Phaser.Scene) => {
-
         setCanMoveSprite(scene.scene.key !== 'MainMenu');
-        
     }
 
     return (
@@ -175,13 +152,7 @@ function App()
                         <PhaserGame ref={phaserRef} currentActiveScene={currentScene} /> 
                         <div>
                             <div>
-                                <button className="button" onClick={changeScene}>Change Scene</button>
-                            </div>
-                            <div className="spritePosition">Sprite Position:
-                                <pre>{`{\n  x: ${spritePosition.x}\n  y: ${spritePosition.y}\n}`}</pre>
-                            </div>
-                            <div>
-                                <button className="button" onClick={addSprite}>Add New Sprite</button>
+                                <button className="button" onClick={addSprite}>MOOD++ ^_^</button>
                             </div>
                             <NavSection />
                             <NFTCollectionSection currentActiveScene={phaserRef.current} />

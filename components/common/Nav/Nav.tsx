@@ -7,7 +7,7 @@ import type { Dispatch, SetStateAction } from 'react'
 // Hooks
 
 // Components
-import { ConnectButton,  NFTCollectionModal,
+import { ConnectButton, 
 } from '@/components'
 
 

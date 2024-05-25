@@ -18,7 +18,8 @@ export interface ButtonIcons  {
 export interface GameSettings  {
     minWinMood: number,
     maxNumActions: number,
-    maxMood: number
+    maxMood: number,
+    probIncMood: number
 }
 
 export interface NumOfButtons {

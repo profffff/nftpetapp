@@ -1,5 +1,6 @@
 import { Animations } from "./animations";
 
+
 import {
     petStartAttributes,
 } from '../values/variables/gameData'
@@ -52,6 +53,10 @@ export class Pet extends Phaser.GameObjects.Sprite {
         this.animation.showWrongButtonBackground()
     }
 
+    public showBackground(backgroundKey: string, animationDuration: number) {
+        this.animation.showBackground(backgroundKey, animationDuration)
+    }
+
     update(delta) {
  
     }
@@ -71,23 +76,27 @@ export class Pet extends Phaser.GameObjects.Sprite {
                         break;
                     case 1:
                     case 2:
-                        //angry
+                        this.animation.disableAllAnimations();
+                        this.animation.setAngryMood();
                         break;
                     case 3:
                     case 4:
-                    case 5:
-                        //sad
+                        this.animation.disableAllAnimations();
+                        this.animation.setSadMood();
                         break;
+                    case 5:   
                     case 6:
+                        this.animation.disableAllAnimations();
+                        break
                     case 7:
                     case 8:
-                        //default
-                        this.animation.disableAllAnimations()
+                        this.animation.disableAllAnimations();
+                        this.animation.petInGoodMoodAnimation();
                         break;
                     case 9:
                     case 10:
-                        //happy
-                        this.animation.petHappyAnimation()
+                        this.animation.disableAllAnimations();
+                        this.animation.petHappyAnimation();
                         break;
                 }
         }
