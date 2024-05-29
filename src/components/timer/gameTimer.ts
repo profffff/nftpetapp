@@ -1,5 +1,6 @@
 import Phaser from 'phaser'
 
+const timerDigitsColor = 0x000000
 
 export default class Timer {
     private scene: Phaser.Scene;
@@ -29,7 +30,7 @@ export default class Timer {
         this.seconds = startTime ? startTime : 0;
 
         this.timerText = this.scene.add.bitmapText(x, y, 'digital-font', this.seconds.toString()).setScale(1.5).setOrigin(0.5);
-        this.timerText.setTint(0xFFCCFF); //0xFE0101 red
+        this.timerText.setTint(timerDigitsColor); //0xFE0101 red
 
        
 
@@ -102,7 +103,7 @@ export default class Timer {
             }
             
         });
-        this.timerText.setTint(0xFE0101);
+        this.timerText.setTint(timerDigitsColor);
     }
 
     getCurrentSeconds(): number {

@@ -58,8 +58,10 @@ export class MainMenu extends Scene
     
 
     create ()
-    {   
-        if (!this.textures.exists(this.playerImage)) {
+    {      
+        this.add.image(0, 0, 'background').setOrigin(0).setDepth(0);
+        
+       if (!this.textures.exists(this.playerImage)) {
             this.playerImage = 'nft_default';
         }
 
@@ -72,8 +74,8 @@ export class MainMenu extends Scene
             align: 'center'
         }).setOrigin(0.5).setDepth(10);
 
-        this.add.text(605, 7, 'Reward after actions = 10 && mood > 8 v0.01', {
-            color: '#ffffff', align: 'center'
+        this.add.text(605, 7, 'Reward after actions = 10 && mood > 8 v0.02', {
+            color: '#000000', align: 'center'
         }).setDepth(10);
 
        //this.pet.playWantsAnimation()
@@ -172,23 +174,10 @@ export class MainMenu extends Scene
 
     update(time: number, delta: number): void
     {
-       // this.pet.update(delta);
-        console.log(time)
-        console.log(this.scene.scene.time.now)
-        console.log(this.scene.scene.time)
+
     }
     
 
-    changeSceneToCollection()
-    {
-        if (this.logoTween)
-            {
-                this.logoTween.stop();
-                this.logoTween = null;
-            }
-    
-            this.scene.start('NFTCollection');
-    }
 
 
     loadNFTCollectionScene(nftArray: { tokenId: string | undefined; image: string | undefined; name: string | undefined }[])

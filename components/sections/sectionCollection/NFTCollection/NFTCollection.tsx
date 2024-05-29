@@ -1,6 +1,6 @@
 import { type Dispatch, type SetStateAction, useEffect, useState, useRef } from 'react'
 import Image from 'next/image'
-import { useQuery } from '@tanstack/react-query'
+import { useQuery, useQueryClient  } from '@tanstack/react-query'
 import { useAccount } from 'wagmi'
 import clsx from 'clsx'
 
@@ -24,11 +24,34 @@ import { MainMenu } from '@/src/scenes/GameScene'
 
 
 function NFTCollection({currentActiveScene}) {
+
+  
+    console.log('changedTOY')
     const { address } = useAccount()
     const [nftData, setNftData] = useState<INFT | null>(null)
     const { isConnected } = useAccount()
 
     const [isModalOpened, setIsModalOpened] = useState(false)
+
+    const queryClient = useQueryClient()
+
+    //useQueryClient().invalidateQueries(['userNfts', address]);
+  // useQueryClient().refetchQueries({
+  //     queryKey: ['userNfts'],
+  //     type: 'active',
+  //     exact: true,
+  //   })
+
+  //  useQueryClient().removeQueries({ queryKey: ['userNfts',address] });
+
+
+
+    console.log('last nft', nftData);
+
+    let t = Math.floor(Math.random() * 3) ;
+
+    //if (t === 3)
+   // useQueryClient().removeQueries({ queryKey: ['getNFTs'] });
 
     const { data, isLoading, isFetching } = useQuery({
       queryKey: ['userNfts', address],
@@ -36,7 +59,13 @@ function NFTCollection({currentActiveScene}) {
       queryFn: () => getNFTs(address),
       staleTime: Infinity,
       refetchOnWindowFocus: false,
-  })
+      
+     // refetchInterval: 10000,
+  })  
+
+
+
+  console.log(data, 'heredfd')
 
   useEffect(() => {
     const totalCount = data?.data?.totalCount
@@ -45,7 +74,7 @@ function NFTCollection({currentActiveScene}) {
     }
   }, [data])
 
-   
+    
     const loadCollectionScene = () => {
 
       if(currentActiveScene) 
@@ -61,7 +90,9 @@ function NFTCollection({currentActiveScene}) {
                   tokenId: item.id?.tokenId || '',
                   image: ipfsToHttps(item.metadata?.image || ''),
                   name: item.metadata?.name || '',
-                }));
+                }))
+                //.reverse();
+                console.log(nftArray, 'here1')
                  scene.loadNFTCollectionScene(nftArray); //from menu
               }
             }

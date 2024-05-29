@@ -5,7 +5,7 @@ import { http, createConfig, WagmiProvider, useAccount } from 'wagmi'
 import { mainnet } from 'wagmi/chains'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { defineChain } from 'viem'
-import { walletConnect, injected, coinbaseWallet } from 'wagmi/connectors'
+import { walletConnect, injected, coinbaseWallet, metaMask } from 'wagmi/connectors'
 
 import { IRefPhaserGame, PhaserGame } from '../game/PhaserGame';
 import { MainMenu } from '../scenes/GameScene/Game';
@@ -29,6 +29,7 @@ const CHAIN_ID = process.env.NEXT_PUBLIC_CHAIN_ID as string
 const WALLET_CONNECT_PROJECT_ID = process.env
     .NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID as string
 const ALCHEMY_ID = process.env.NEXT_PUBLIC_ALCHEMY as string
+const projectId =  process.env.NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID as string
 
 
 const queryClient = new QueryClient()
@@ -71,7 +72,7 @@ const preferredChain = defineChain({
     testnet: true,
 })
 
-const projectId = WALLET_CONNECT_PROJECT_ID
+
 
 const metadata = {
     name: 'nftpet',
@@ -81,33 +82,34 @@ const metadata = {
   }
 
   const config = createConfig({
-    chains: [mainnet, preferredChain],
+    chains: [preferredChain],
     transports: {
-      [mainnet.id]: http(),
       [preferredChain.id]: http()
     },
+    // connectors: [
+    //   walletConnect({ projectId, metadata, showQrModal: false }),
+    //   coinbaseWallet({
+    //     appName: metadata.name,
+    //     appLogoUrl: metadata.icons[0]
+    //   })
+    // ]
     connectors: [
-      walletConnect({ projectId, metadata, showQrModal: false }),
-      injected({ shimDisconnect: false }),
-      coinbaseWallet({
-        appName: metadata.name,
-        appLogoUrl: metadata.icons[0]
-      })
+        metaMask(),
+        injected({ shimDisconnect: false }),
     ]
   })
 
   createWeb3Modal({
+    projectId: projectId,
     wagmiConfig: config,
-    projectId,
     enableAnalytics: false, // Optional - defaults to your Cloud configuration
     enableOnramp: false // Optional - false as default
   })
 
 
-  let nftCollectionScene: Phaser.Scene;
 
 function App()
-{
+{   
     const [canMoveSprite, setCanMoveSprite] = useState(true);
     const phaserRef = useRef<IRefPhaserGame | null>(null);
 
@@ -159,7 +161,7 @@ function App()
                             <MintNftSection />
                         </div>
                     </div>
-          
+                   
             </QueryClientProvider>
         </WagmiProvider>
     )

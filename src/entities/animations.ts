@@ -117,13 +117,19 @@ export class Animations  {
         });
 
         
+        
+
+        if (this.wantText)
+            this.wantText.destroy()
+
+        if (this.wantThink1Sprite)
+            this.wantThink1Sprite.destroy()
+
+        
         this.wantThink1Sprite = this.scene
             .add.sprite(x, y, 'wantThink1').setDepth(20)
             .play('want')
 
-        if (this.wantText)
-            this.wantText.destroy()
-        
         this.wantText = this.scene.add.bitmapText(x - 45, y - 55, 'digital-font', 'I need ' + action.slice(0,-6)).setScale(0.7).setDepth(21);
         this.wantText.setTint(0xFF21FF); //0xFE0101 red
             

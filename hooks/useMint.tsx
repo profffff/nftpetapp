@@ -1,11 +1,16 @@
 import { useReducer } from 'react'
 import { BaseError, parseEther, parseUnits } from 'viem'
-import { useConfig, useReadContract } from 'wagmi'
+import { useConfig, useReadContract, useWaitForTransactionReceipt } from 'wagmi'
 import {
     simulateContract,
     writeContract,
     waitForTransactionReceipt,
+    getTransactionReceipt,
+    
 } from '@wagmi/core'
+
+
+import { TransactionReceipt } from 'viem'
 
 // Contract
 import { contractConfig } from '@/contract'
@@ -16,6 +21,9 @@ import { useMintReducer } from '@/reducers'
 // Utilities
 import { toErrorWithMessage } from '@/utils'
 
+import {QueryClient} from '@tanstack/react-query'
+
+const maxTokens =  process.env.NEXT_PUBLIC_NFT_SUPPLY as string
 
 const useMint = () => {
     const config = useConfig()
@@ -49,18 +57,12 @@ const useMint = () => {
         try {
             
             //gas applies to Legacy Transactions
-            const totalSupply = await simulateContract(config, { 
-                ...contractConfig,
-                functionName: 'totalSupply',
-            })
-
             const totalMinted = await simulateContract(config, {
                 ...contractConfig,
                 functionName: 'totalMinted',
             })
 
-
-            if (totalSupply.result === totalMinted.result) {
+            if (totalMinted.result === BigInt(maxTokens)) {
                 dispatch({ isNoTokens: true })
                 throw new BaseError('noTokensAvailable'); 
             }
@@ -111,17 +113,21 @@ const useMint = () => {
 
             const data = await waitForTransactionReceipt(config, {
                 hash: writeResult,
-            })
+            }) as TransactionReceipt;
+
+ 
 
             receiptLoading = false
+
+            
 
             dispatch({
                 isReceiptLoading: false,
                 isReceiptSuccess: data?.status === 'success',
-               // receiptData: data,
+                receiptData: data,
             })
         } catch (error: unknown) {
-            alert(error)
+            //alert(error)
             console.error(error);
             if (error instanceof BaseError) {
                 if (prepareLoading) { 

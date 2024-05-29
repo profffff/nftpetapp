@@ -9,8 +9,7 @@ export class Preloader extends Scene
 
     init ()
     {
-        this.add.image(512, 384, 'background');
-       
+        this.add.image(0, 0, 'preloaderBackground').setOrigin(0).setDepth(0);   
 
     }
 
@@ -19,7 +18,8 @@ export class Preloader extends Scene
         this.load.setPath('assets');
         this.load.image('nft_default', '/art/pet/petImage/petDefault.png');
         this.load.image('star', 'star.png');
-    
+
+        this.load.image('background', 'bg.png');
 
         this.load.image('wrongButtonBackground', '/art/window/wrongButtonBackground/WrgBtnBack.png');
         this.load.image('sleepBackground', '/art/window/sleepBackground/sleepBackground.png');
@@ -55,8 +55,7 @@ export class Preloader extends Scene
 
     create ()
     {
-        //this.time.delayedCall(0, () => {
-           
+        
         this.scene.start('MainMenu');
     }
 
