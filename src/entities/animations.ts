@@ -13,7 +13,6 @@ export class Animations  {
     private  wantThink1Sprite: Phaser.GameObjects.Sprite;
     private petMoodSad: Phaser.GameObjects.Sprite  | null = null;
     private petMoodAngry: Phaser.GameObjects.Sprite  | null = null;
-   // mood: number;
 
     constructor(scene: Phaser.Scene, posX: number, posY: number, petImage: Phaser.GameObjects.Sprite) {
         this.scene = scene;
@@ -111,13 +110,7 @@ export class Animations  {
             repeat: -1,
             hideOnComplete: true,
             repeatDelay: 3000 + Math.random() * 5000,
-            
-            
-        
         });
-
-        
-        
 
         if (this.wantText)
             this.wantText.destroy()
@@ -125,14 +118,12 @@ export class Animations  {
         if (this.wantThink1Sprite)
             this.wantThink1Sprite.destroy()
 
-        
         this.wantThink1Sprite = this.scene
             .add.sprite(x, y, 'wantThink1').setDepth(20)
             .play('want')
 
-        this.wantText = this.scene.add.bitmapText(x - 45, y - 55, 'digital-font', 'I need ' + action.slice(0,-6)).setScale(0.7).setDepth(21);
-        this.wantText.setTint(0xFF21FF); //0xFE0101 red
-            
+        this.wantText = this.scene.add.bitmapText(x - 45, y - 55, 'digital-font', 'I need ' + action?.slice(0,-6)).setScale(0.7).setDepth(21);
+        this.wantText.setTint(0x000000); 
     }
 
     public stopPetWantsAnimation() {
@@ -165,10 +156,11 @@ export class Animations  {
 
     public showBackground(key: string, animationDuration: number) {
         const crtBackground = this.scene.add.sprite(0, 0, key).setOrigin(0,0).setDepth(1000); 
+        const isSleepBackground = key === 'sleepBackground'
         this.scene.add.tween({
             targets: crtBackground,
-            duration: 2000, //+ animationDuration * (key === 'sleepBackground' ? 1 : 0), bug fix
-            alpha: 0,
+            duration: isSleepBackground ? animationDuration * 1000 : 2000,
+            alpha:  isSleepBackground ? 0.9 : 0,
             repeat: 0,
             onComplete: () => {
                 crtBackground.destroy()

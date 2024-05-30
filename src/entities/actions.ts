@@ -65,7 +65,7 @@ class Actions {
              //   }
              //   else {
                     this.isCorrectButton = true;
-                    this[crtAction](); //doesn't work properly
+                    this[crtAction](); 
                     this.newAction();     
              //   }
             }   
@@ -141,8 +141,7 @@ class Actions {
         }
     }
 
-    private decreaseMood() {
-        console.log('moodDecreased')
+    public decreaseMood() {
         --petStartAttributes.mood;
         this.isGameOver();
     }
@@ -176,7 +175,6 @@ class Actions {
         for (const action of actions) {
             cumulativeProbability += actionProbabilities[action];
             if (randomNumber < cumulativeProbability) {
-                console.log('generated_action', action) 
                 return action;
             }
         }
@@ -196,6 +194,19 @@ class Actions {
 
     public setTImer(timer: Timer) {
         this.timer = timer;
+    }
+
+    public setWaitingTimer() {
+        this.timer.liteTimer();
+    }
+
+    public resetPenaltyTimer() {
+        this.timer.penaltyTimer();
+    }
+
+    public removeWaitingTImers() {
+        console.log('i am tring')
+        this.timer.stopTimers()
     }
 
 }

@@ -1,6 +1,12 @@
 import Phaser from 'phaser'
 
 const timerDigitsColor = 0x000000
+const redColor = 0xFF0000
+const yellowColor = 0xFEB051
+
+import {
+    actionsDelay
+} from '../../values/constants/gameConstants'
 
 export default class Timer {
     private scene: Phaser.Scene;
@@ -11,10 +17,18 @@ export default class Timer {
     seconds: number;
     timerText: Phaser.GameObjects.BitmapText;
     timeEvent: Phaser.Types.Time.TimerEventConfig;
-    counter: Phaser.Tweens.Tween | null;;
+    counter: Phaser.Tweens.Tween | null;
+    warningMessage: Phaser.GameObjects.BitmapText;
+    warningMessageTween: Phaser.Tweens.Tween | null;
+    waitingTimer: Phaser.Time.TimerEvent  | null ;
+
+    posX: number;
+    posY: number;
 
     constructor(scene: Phaser.Scene, x: number, y: number, startTime?: number ) {
         this.scene = scene;
+        this.posX = x;
+        this.posY = y;
 
         this.blackLayer = this.scene.add.sprite(x, y, 'black-layer');
         this.secondLayer = this.scene.add.sprite(x, y, 'second-layer');
@@ -54,9 +68,6 @@ export default class Timer {
         this.timerText.setText(this.seconds.toString());
         if(this.seconds === 0) {
             this.timeEvent.paused = true;
-            //this.seconds = 30;         
-           // this.shape.slice(this.secondLayer.x, this.secondLayer.y, this.secondLayer.displayWidth / 2, Phaser.Math.DegToRad(270), Phaser.Math.DegToRad(0), true);
-            //this.shape.fillPath();
             this.shape.clear();
             this.scene.events.emit('timerFinished');
         }
@@ -90,23 +101,106 @@ export default class Timer {
     scaleTweenWarning(){
         this.scene.tweens.add({
             targets: this.timerText,
-            scaleX: 3, 
-            scaleY: 3, 
+            scaleX: [1.5, 3], 
+            scaleY: [1.5, 3],  
             duration: 1000,
             ease: 'Linear', 
             repeat: 0, 
             yoyo: true, 
+            onActive: () => {
+                this.timerText.setTint(redColor);
+            },
             onComplete: () => {
-                this.timerText.scaleX = 1.5;
-                this.timerText.scaleY = 1.5;
-                this.timerText.setTint(0xFFCCFF);
-            }
-            
+                this.timerText.setTint(timerDigitsColor);
+            }        
         });
-        this.timerText.setTint(timerDigitsColor);
+        
     }
 
     getCurrentSeconds(): number {
         return this.seconds;
     }
+
+
+    liteTimer() {   
+        this.waitingTimer = this.scene.time.addEvent({
+            delay: actionsDelay.waitingTimeForActionLite * 1000,               
+            callback: this.liteTimerCompleted,
+            callbackScope: this,
+            loop: false
+        });
+        
+    }
+
+    liteTimerCompleted() {
+        this.warningTimer();
+    }
+
+    warningTimer() {
+        this.waitingTimer = this.scene.time.addEvent({
+            delay: actionsDelay.waitingTimeForActionWarning * 1000,              
+            callback: this.warningTimerCompleted,
+            callbackScope: this,
+            loop: false
+        });
+    }
+
+    warningTimerCompleted() {
+        this.warningMessage = this.scene.add.bitmapText( this.posX + 130, this.posY - 50, 'digital-font', 'Don\'t keep the pet waiting!');
+        this.warningMessage.setTint(yellowColor);
+
+        this.showWarningMessage();
+
+        this.penaltyTimer();
+    }
+    
+    showWarningMessage(repeatTimes: number = -1){     
+        this.warningMessageTween = this.scene.tweens.add({
+            targets: this.warningMessage,
+            scaleX: [1, 1.3], 
+            scaleY: [1, 1.3], 
+            duration: 1000,
+            ease: 'Linear', 
+            repeat: repeatTimes, 
+            alpha: 0.7,
+            yoyo: true,       
+            onComplete: () => {
+                this.warningMessage.destroy();
+                this.warningMessageTween.destroy();
+            }        
+        });
+    }
+
+    penaltyTimer() {
+        this.waitingTimer = this.scene.time.addEvent({
+            delay: actionsDelay.waitingTimeForActionPenalty * 1000,            
+            callback: this.penaltyTimerCompleted,
+            callbackScope: this,
+            loop: false,
+        });
+    }
+
+
+
+    penaltyTimerCompleted() {
+        this.scene.events.emit('penaltyTimerFinished');
+        if (this.warningMessage)
+            this.warningMessage.destroy();
+        this.warningMessage = this.scene.add.bitmapText(this.posX + 130, this.posY - 50, 'digital-font', 'Toooo long!');
+        this.warningMessage.setTint(redColor);
+        this.showWarningMessage(5); 
+    }
+
+
+    stopTimers() {
+        this.scene.time.removeEvent(this.waitingTimer)
+        if (this.warningMessageTween)
+            this.warningMessageTween.remove()
+        if (this.warningMessage)
+            this.warningMessage.destroy();
+        
+    }
+     
+
+    
 }

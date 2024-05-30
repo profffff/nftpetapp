@@ -2,6 +2,7 @@ import { EventBus } from '../../game/EventBus';
 import { Scene } from 'phaser';
 
 import {petStartAttributes} from '../../values/variables/gameData'
+import {sceneManager} from '../../entities/sceneManager'
 
 export class GameOver extends Scene
 {
@@ -29,9 +30,6 @@ export class GameOver extends Scene
             align: 'center'
         }).setOrigin(0.5).setDepth(100);
 
-        
-
-
         this.background.setInteractive();    
         this.background.on('pointerdown', () => {
          
@@ -39,10 +37,13 @@ export class GameOver extends Scene
         petStartAttributes.currentAction = null;
         petStartAttributes.actionsDone = 0;
 
-        this.scene.start('Boot');
+        sceneManager.setSeconds(0);
+        sceneManager.setAnimationPlayed(false);
+        
+        //or probably better to clear cache..
+        //or EventBus.emit('restart-game');   
 
-        //probably better to clear cache..
-        //EventBus.emit('restart-game');     
+        this.scene.start('Boot');
         });
         
 

@@ -136,8 +136,6 @@ export default class Button extends Phaser.GameObjects.Image
 		if (typeof this.handleKeyValue === 'function') {
 			this.handleKeyValue(key);
 		}
-
-		//new Actions(key);
 	}
 
 	private handleOver(pointer: Phaser.Input.Pointer)

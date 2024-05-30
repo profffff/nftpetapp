@@ -1,22 +1,15 @@
 import { GameObjects, Scene } from 'phaser';
-
 import { EventBus } from '../../game/EventBus';
-
-import { INFT } from '@/types'
-
-import {Pet} from '../../entities/pet'
-
-import {Animations} from '../../entities/animations'
 
 import * as Constant from '../../values/constants/gameConstants'
 
 import Button from '../../components/buttons/gameButton'
-
 import Timer from '../../components/timer/gameTimer'
+
 import {sceneManager} from '@/src/entities/sceneManager';
 
 import Actions from '../../entities/actions'
-
+import {Pet} from '../../entities/pet'
 
 
 export class MainMenu extends Scene
@@ -28,21 +21,15 @@ export class MainMenu extends Scene
     text1: GameObjects.Text;
     playerImage: string;
 
-    private timerAwaiting: number | null = null;
-
     private pet?: Pet;
     private timer?: Timer;
     private actions?: Actions;
 
     handleKeyValue: (key: string) => void;
 
-
-
     constructor ()
     {
         super({key: 'MainMenu'});
-
-        
     }
 
     init(choosenPlayerImage: string)   
@@ -54,8 +41,6 @@ export class MainMenu extends Scene
     {
         
     }
-
-    
 
     create ()
     {      
@@ -74,62 +59,21 @@ export class MainMenu extends Scene
             align: 'center'
         }).setOrigin(0.5).setDepth(10);
 
-        this.add.text(605, 7, 'Reward after actions = 10 && mood > 8 v0.02', {
+        this.add.text(605, 7, 'Reward after actions = 10 && mood > 8 v0.03', {
             color: '#000000', align: 'center'
         }).setDepth(10);
 
-       //this.pet.playWantsAnimation()
         this.timer = new Timer(this, Constant.timerIcon.timerPositionX, Constant.timerIcon.timerPositionY, sceneManager.prevTimerTime !== 0 ? sceneManager.prevTimerTime : undefined);
         
-
-        if (sceneManager.animationPlayed)
+        if (sceneManager.animationPlayed) {
             this.pet.playWantsAnimation();
+            this.actions?.setWaitingTimer();
+        }
 
-        //to do: 
-        const playButton = new Button(this, 'playAction', 1 * Constant.buttonIcons.iconPositionX, Constant.buttonIcons.iconPositionY, "playIcon", 0xFFAD00)
-			.setDownTexture('buttonDownIcon')
-			.setOverTint(0xffcd60)
-            .setScale(Constant.buttonIcons.iconScale)
-            
-
-        const eatButton = new Button(this, 'eatAction', 2 * Constant.buttonIcons.iconPositionX, Constant.buttonIcons.iconPositionY, "eatIcon", 0xFFAD00)
-			.setDownTexture('buttonDownIcon')
-			.setOverTint(0xffcd60)
-            .setScale(Constant.buttonIcons.iconScale)
-
-        const toiletButton = new Button(this, 'toiletAction', 3 * Constant.buttonIcons.iconPositionX, Constant.buttonIcons.iconPositionY, "toiletIcon", 0xFFAD00)
-			.setDownTexture('buttonDownIcon')
-			.setOverTint(0xffcd60)
-            .setScale(Constant.buttonIcons.iconScale)
-
-        const drinkButton = new Button(this, 'drinkAction', 4 * Constant.buttonIcons.iconPositionX, Constant.buttonIcons.iconPositionY, "drinkIcon", 0xFFAD00)
-			.setDownTexture('buttonDownIcon')
-			.setOverTint(0xffcd60)
-            .setScale(Constant.buttonIcons.iconScale)
-
-        const sleepButton = new Button(this, 'sleepAction', 5 * Constant.buttonIcons.iconPositionX, Constant.buttonIcons.iconPositionY, "sleepIcon", 0xFFAD00)
-			.setDownTexture('buttonDownIcon')
-			.setOverTint(0xffcd60)
-            .setScale(Constant.buttonIcons.iconScale)
-            
-        const medicineButton = new Button(this, 'medicineAction', 6 * Constant.buttonIcons.iconPositionX, Constant.buttonIcons.iconPositionY, "medicineIcon", 0xFFAD00)
-			.setDownTexture('buttonDownIcon')
-			.setOverTint(0xffcd60)
-            .setScale(Constant.buttonIcons.iconScale)
-     
-    
-        this.add.existing(eatButton)
-        this.add.existing(drinkButton)
-        this.add.existing(medicineButton)
-        this.add.existing(playButton)
-        this.add.existing(sleepButton)
-        this.add.existing(toiletButton)
-
-        this.handleKeyValue = (key) => {
-            console.log('Choosen Button:', key);
-            this.actions = new Actions(key, this.timer);     
+        this.handleKeyValue = (key) => {     
+            this.actions?.removeWaitingTImers();
+            this.actions = new Actions(key, this.timer);           
             const isPressedButtonCorrect = this.actions.getIsCorrectButton();
-            console.log('getIsCorrectButton', isPressedButtonCorrect);
             this.pet.moodAnimation();
             if (isPressedButtonCorrect) {
                 this.pet.stopWantsAnimation();
@@ -146,18 +90,38 @@ export class MainMenu extends Scene
             }
         };
 
-        eatButton.setKeyValueCallback(this.handleKeyValue);
-        drinkButton.setKeyValueCallback(this.handleKeyValue);
-        medicineButton.setKeyValueCallback(this.handleKeyValue);
-        playButton.setKeyValueCallback(this.handleKeyValue);
-        sleepButton.setKeyValueCallback(this.handleKeyValue);
-        toiletButton.setKeyValueCallback(this.handleKeyValue);
+        const buttons = [
+            { name: 'playAction', texture: 'playIcon', number: 1 },
+            { name: 'eatAction', texture: 'eatIcon', number: 2 },
+            { name: 'toiletAction', texture: 'toiletIcon', number: 3 },
+            { name: 'drinkAction', texture: 'drinkIcon', number: 4 },
+            { name: 'sleepAction', texture: 'sleepIcon', number: 5 },
+            { name: 'medicineAction', texture: 'medicineIcon', number: 6 }
+          ];
+          
+          const createButton = (button) => {
+            return new Button(this, button.name, button.number * Constant.buttonIcons.iconPositionX, Constant.buttonIcons.iconPositionY, button.texture, 0xFFAD00)
+              .setDownTexture('buttonDownIcon')
+              .setOverTint(0xffcd60)
+              .setScale(Constant.buttonIcons.iconScale);
+          };
+     
+          const addButtons = () => {
+            buttons.forEach(button => {
+              const btn = createButton(button);
+              this.add.existing(btn);
+              btn.setKeyValueCallback(this.handleKeyValue);
+            });
+          };
 
-        
+        addButtons();
+    
         this.events.on('timerFinished', this.handleTimerFinished, this);
+
+        this.events.on('penaltyTimerFinished', this.handlePenaltyTimerFinished, this);
        
-      
         EventBus.emit('current-scene-ready', this);
+
         EventBus.on('gameOver', () => {
             this.scene.start('GameOver');
         });
@@ -165,10 +129,15 @@ export class MainMenu extends Scene
     }
 
     handleTimerFinished() {
-        console.log('Timer finished!'); 
-        console.log(this.actions)
-        this.pet.playWantsAnimation()
-        this.timerAwaiting = this.scene.scene.time.now;
+        this.pet?.playWantsAnimation()
+        this.actions?.setWaitingTimer();
+    }
+
+
+    handlePenaltyTimerFinished() {
+        this.actions?.decreaseMood(); 
+        this.pet?.moodAnimation();
+        this.actions?.setWaitingTimer();
     }
 
 
@@ -176,9 +145,6 @@ export class MainMenu extends Scene
     {
 
     }
-    
-
-
 
     loadNFTCollectionScene(nftArray: { tokenId: string | undefined; image: string | undefined; name: string | undefined }[])
     {
@@ -187,10 +153,7 @@ export class MainMenu extends Scene
         if (this.pet.isPlayingWantsAnimation())
             sceneManager.setAnimationPlayed(true)
 
-        console.log(nftArray);
-        this.scene.start('NFTCollectionScene', {nftArray: nftArray});
-
-        
+        this.scene.start('NFTCollectionScene', {nftArray: nftArray});      
     }
 
 }

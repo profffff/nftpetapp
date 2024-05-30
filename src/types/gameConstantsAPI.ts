@@ -42,7 +42,7 @@ export interface ActionsDelay {
     minTimeBeforeActon: number;
     maxTimeBeforeActon: number;
     waitingTimeForActionLite: number;
-    waitingTimeForActionMeduim: number;
+    waitingTimeForActionWarning: number;
     waitingTimeForActionPenalty: number;
 }
 

@@ -23,16 +23,7 @@ export class Pet extends Phaser.GameObjects.Sprite {
         this.animation = new Animations(scene, x, y, this);
 
         this.mood = petStartAttributes.mood;
-        this.actionsDone = petStartAttributes.actionsDone;
-
-       // this.animation.petHappyAnimation();
-
-      
-         //this.scene.add.image(x, y, texture).setScale(scale);
-        
-
-       // this.scene.add.existing(this);
-       
+        this.actionsDone = petStartAttributes.actionsDone;  
     }
 
     public playWantsAnimation()
@@ -57,19 +48,15 @@ export class Pet extends Phaser.GameObjects.Sprite {
         this.animation.showBackground(backgroundKey, animationDuration)
     }
 
-    update(delta) {
- 
-    }
-    
-    
+
     public moodAnimation() {
-        
+        console.log('cur mood', petStartAttributes.mood)
         if (this.mood === petStartAttributes.mood) {
             //nothing
         }      
         else {
+            
                 this.mood = petStartAttributes.mood
-                console.log('moodChanged', this.mood)
                 switch (this.mood) {
                     case 0:
                         //dead

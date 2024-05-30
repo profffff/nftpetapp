@@ -25,33 +25,11 @@ import { MainMenu } from '@/src/scenes/GameScene'
 
 function NFTCollection({currentActiveScene}) {
 
-  
-    console.log('changedTOY')
     const { address } = useAccount()
     const [nftData, setNftData] = useState<INFT | null>(null)
     const { isConnected } = useAccount()
 
     const [isModalOpened, setIsModalOpened] = useState(false)
-
-    const queryClient = useQueryClient()
-
-    //useQueryClient().invalidateQueries(['userNfts', address]);
-  // useQueryClient().refetchQueries({
-  //     queryKey: ['userNfts'],
-  //     type: 'active',
-  //     exact: true,
-  //   })
-
-  //  useQueryClient().removeQueries({ queryKey: ['userNfts',address] });
-
-
-
-    console.log('last nft', nftData);
-
-    let t = Math.floor(Math.random() * 3) ;
-
-    //if (t === 3)
-   // useQueryClient().removeQueries({ queryKey: ['getNFTs'] });
 
     const { data, isLoading, isFetching } = useQuery({
       queryKey: ['userNfts', address],
@@ -59,13 +37,7 @@ function NFTCollection({currentActiveScene}) {
       queryFn: () => getNFTs(address),
       staleTime: Infinity,
       refetchOnWindowFocus: false,
-      
-     // refetchInterval: 10000,
   })  
-
-
-
-  console.log(data, 'heredfd')
 
   useEffect(() => {
     const totalCount = data?.data?.totalCount
@@ -74,13 +46,14 @@ function NFTCollection({currentActiveScene}) {
     }
   }, [data])
 
-    
-    const loadCollectionScene = () => {
+    console.log(currentActiveScene)
 
+    const loadCollectionScene = () => {
       if(currentActiveScene) 
         {
           const scene = currentActiveScene.scene;
-          if (scene.sys.config.key === 'MainMenu') 
+          const keyScene = scene.sys.config.key;
+          if (keyScene === 'MainMenu' ) 
             {
               if (isLoading || isFetching ) {
                   //loading...
@@ -91,28 +64,25 @@ function NFTCollection({currentActiveScene}) {
                   image: ipfsToHttps(item.metadata?.image || ''),
                   name: item.metadata?.name || '',
                 }))
-                //.reverse();
-                console.log(nftArray, 'here1')
                  scene.loadNFTCollectionScene(nftArray); //from menu
               }
             }
-          else if (scene.sys.config.key === 'NFTCollectionScene') 
+          else if (keyScene === 'NFTCollectionScene') 
             {
                 scene.changeSceneToMainMenu();
             }
-          }
+        }
+      
     }
-
 
     const handleClick = () => {
       setIsModalOpened(!isModalOpened);
       loadCollectionScene();
     };
 
-
     return (
       <div> 
-         <button  className="button" disabled={!isConnected || isLoading || isFetching}
+         <button  className="button" disabled={!isConnected || isLoading || isFetching }
           onClick={handleClick}
          >NFT COLLECTION</button> 
       </div>

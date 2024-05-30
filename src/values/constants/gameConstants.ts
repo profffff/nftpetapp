@@ -27,7 +27,6 @@ export const gameSettings: GameSettings = {
     probIncMood: 40,
 }
 
-
 export const numOfButtons: NumOfButtons  = {
     total_value: 6,
 }
@@ -35,7 +34,7 @@ export const numOfButtons: NumOfButtons  = {
 export const buttonIcons: ButtonIcons  = {
     iconPositionX: gameWindowConfig.width / (numOfButtons.total_value + 1),
     iconPositionY: gameWindowConfig.height - 80,
-    iconScale: 0.2
+    iconScale: 0.17
 }
 
 export const timerIcon: TimerIcon  = {
@@ -43,7 +42,6 @@ export const timerIcon: TimerIcon  = {
     timerPositionY: 130,
     timerScale: 0.5
 }
-
 
 //%, sum 100
 export const actionProbabilities: ActionProbabilies =
@@ -56,13 +54,12 @@ export const actionProbabilities: ActionProbabilies =
     'sleepAction': 15,
 }
 
-
 export const actionsDelay: ActionsDelay  = {
-    minTimeBeforeActon: 1,
-    maxTimeBeforeActon: 2,
-    waitingTimeForActionLite: 10000,
-    waitingTimeForActionMeduim: 10000,
-    waitingTimeForActionPenalty: 10000,
+    minTimeBeforeActon: 10,
+    maxTimeBeforeActon: 20,
+    waitingTimeForActionLite: 2,
+    waitingTimeForActionWarning: 4,
+    waitingTimeForActionPenalty: 6,
 }
 
 
