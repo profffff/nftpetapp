@@ -1,6 +1,6 @@
 // export type {
 //     gameWindowConfig,
-//     petStartAttributes,
+//     petAttributes,
 //     petImage,
 //     gameSettings
 // } from './gameConstantsAPI'

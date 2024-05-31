@@ -1,5 +1,5 @@
 import {
-    petStartAttributes,
+    petAttributes,
 } from '../values/variables/gameData'
 
 import {
@@ -26,6 +26,8 @@ class Actions {
 
     private isCorrectButton: boolean = true; 
     private backgroundManager: string | null = null;
+
+    private isGameFinished: boolean = false;
   
 
     private pet?: Pet;
@@ -34,7 +36,7 @@ class Actions {
     constructor(selectedAction: string, timer: Timer) {
         this.selectedAction = selectedAction;
         this.timer = timer;
-        this.currentAction = petStartAttributes.currentAction
+        this.currentAction = petAttributes.currentAction
         this.checkAction();
      }
 
@@ -47,27 +49,28 @@ class Actions {
      }
 
     private checkAction() {
-        const crtAction = petStartAttributes.currentAction
+        const crtAction = petAttributes.currentAction
         console.log( "crt", crtAction) 
         
         if (crtAction) {
+            console.log('я тута')
             this.backgroundManager = null;
 
             if (this.timer.timeEvent.paused === false ) {
                     this.timer.scaleTweenWarning()   
             }
             else if (crtAction === this.selectedAction && typeof this[crtAction] === 'function') {
-                petStartAttributes.actionsDone += 1;    
-                console.log('Yep') 
-                
-               // if (this.isGameFinished()) {
-                    // Give NFT
-             //   }
-             //   else {
-                    this.isCorrectButton = true;
+                petAttributes.actionsDone += 1;    
+                this.isCorrectButton = true;
+
+               if (this.isGameFinishedCheck()) {
+                    this.isGameFinished = true;
+               }
+               else 
+                {          
                     this[crtAction](); 
                     this.newAction();     
-             //   }
+                }
             }   
             else {
                 this.isCorrectButton = false;
@@ -79,12 +82,33 @@ class Actions {
             this.newAction()
         }
     }
+    
+    public setIsGameFinished(val: boolean) {
+        this.isGameFinished = val;
+    }
+
+    public getIsGameFinished() {
+       return this.isGameFinished;
+    }
+
+    private isGameFinishedCheck(): boolean {
+        
+        console.log(`actionsDone: ${petAttributes.actionsDone}, mood: ${petAttributes.mood}`);
+
+        if (petAttributes.actionsDone >= gameSettings.maxNumActions &&
+            petAttributes.mood >= gameSettings.minWinMood) {    
+            return true;
+        }
+
+        return false;
+    }
+
 
     private newAction() {
         this.currentAction = this.generateRandomAction()
-        petStartAttributes.currentAction = this.currentAction
+        petAttributes.currentAction = this.currentAction
         this.currentDelay = this.generateRandomTimeBeforeAction()
-        this.timer.start(this.currentDelay)
+        this.timer.start(this.currentDelay) //too implicit
     }
 
     public getCrtAction(): string {
@@ -133,8 +157,8 @@ class Actions {
     private increaseMood() {
         const random_num = Math.random() * 100;
         if (random_num < gameSettings.probIncMood) {
-            if (petStartAttributes.mood < gameSettings.maxMood) {
-                ++petStartAttributes.mood;
+            if (petAttributes.mood < gameSettings.maxMood) {
+                ++petAttributes.mood;
                 this.backgroundManager = 'increaseMoodBackground'
             }
 
@@ -142,29 +166,19 @@ class Actions {
     }
 
     public decreaseMood() {
-        --petStartAttributes.mood;
+        --petAttributes.mood;
         this.isGameOver();
     }
 
     private isGameOver(): void {
-         if (petStartAttributes.mood === 0)
+         if (petAttributes.mood === 0)
          {
             EventBus.emit('gameOver')
          }
     }
 
 
-    private isGameFinished(): boolean {
-        
-        console.log(`actionsDone: ${petStartAttributes.actionsDone}, mood: ${petStartAttributes.mood}`);
-
-        if (petStartAttributes.actionsDone >= gameSettings.maxNumActions &&
-            petStartAttributes.mood >= gameSettings.minWinMood) {    
-            return true;
-        }
-
-        return false;
-    }
+    
 
     private generateRandomAction(): string {
         const actions = Object.keys(actionProbabilities);
@@ -205,7 +219,6 @@ class Actions {
     }
 
     public removeWaitingTImers() {
-        console.log('i am tring')
         this.timer.stopTimers()
     }
 

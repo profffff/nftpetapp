@@ -72,12 +72,10 @@ const preferredChain = defineChain({
     testnet: true,
 })
 
-
-
 const metadata = {
     name: 'nftpet',
     description: 'nftpet',
-    url: 'https://nftpet.cloudns.be', // origin must match your domain & subdomain
+    url: 'https://nftpet.cloudns.be', 
     icons: ['https://avatars.githubusercontent.com/u/37784886']
   }
 
@@ -102,8 +100,8 @@ const metadata = {
   createWeb3Modal({
     projectId: projectId,
     wagmiConfig: config,
-    enableAnalytics: false, // Optional - defaults to your Cloud configuration
-    enableOnramp: false // Optional - false as default
+    enableAnalytics: false, 
+    enableOnramp: false 
   })
 
 
@@ -111,8 +109,10 @@ const metadata = {
 function App()
 {   
     const [canMoveSprite, setCanMoveSprite] = useState(true);
-    const phaserRef = useRef<IRefPhaserGame | null>(null);
+    const [mintNFTActive, setmintNFTActive] = useState(false);
 
+    const phaserRef = useRef<IRefPhaserGame | null>(null);
+    console.log('nftactivefromapp', mintNFTActive);
     const addSprite = () => {
 
         if (phaserRef.current)
@@ -121,6 +121,8 @@ function App()
 
             if (scene)
             {
+                console.log('just for fun :)')
+
                 const x = Phaser.Math.Between(64, scene.scale.width - 64);
                 const y = Phaser.Math.Between(64, scene.scale.height - 64);
     
@@ -145,23 +147,26 @@ function App()
         setCanMoveSprite(scene.scene.key !== 'MainMenu');
     }
 
+    const onMintNFTActive = (value: boolean) => {
+        console.log('z tyt')
+        setmintNFTActive(value);
+
+    }
+
     return (
-        
         <WagmiProvider config={config}>
             <QueryClientProvider client={queryClient}>
-       
                     <div id="app">
-                        <PhaserGame ref={phaserRef} currentActiveScene={currentScene} /> 
+                        <PhaserGame ref={phaserRef} currentActiveScene={currentScene} MintNFTActive={onMintNFTActive} /> 
                         <div>
                             <div>
                                 <button className="button" onClick={addSprite}>MOOD++ ^_^</button>
                             </div>
                             <NavSection />
                             <NFTCollectionSection currentActiveScene={phaserRef.current} />
-                            <MintNftSection />
+                            <MintNftSection isSectionActive={mintNFTActive} MintNFTActive={onMintNFTActive} />
                         </div>
                     </div>
-                   
             </QueryClientProvider>
         </WagmiProvider>
     )

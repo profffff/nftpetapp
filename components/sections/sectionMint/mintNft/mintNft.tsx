@@ -23,13 +23,18 @@ import { useIsWrongNetwork, useMint } from '@/hooks'
 
 import { GetNfts, IMintedMetadata } from '@/types'
  
-const mintNft = () => {
+interface MintNftProps {
+  isSectionActive: boolean;
+  MintNFTActive: (value: boolean) => void;
+}
+
+const mintNft = ({ isSectionActive, MintNFTActive }: MintNftProps) => {
+  
   const { address, isConnected, isDisconnected } = useAccount()
-  const [showClaimedNFTModal, setShowClaimedNFTModal] = useState(false)
   const [mintedMetadata, setMintedMetadata] = useState<
   IMintedMetadata | null | undefined
 >(null)
-
+  
   const navRef = useRef<HTMLElement>(null)
   const [isModalOpened, setIsModalOpened] = useState(false)
   const { state, dispatch, mintNFT } = useMint()
@@ -38,10 +43,6 @@ const mintNft = () => {
 
   const queryClient = useQueryClient()
 
-
-
-  //const [showClaimedNFTModal, setShowClaimedNFTModal] = useState(false)
-  //const [showNFTGalleryModal, setShowNFTGalleryModal] = useState(false)
   const [mintedNFTId, setMintedNFTId] = useState<number | undefined>(
     undefined
 )
@@ -76,9 +77,6 @@ useEffect(() => {
   }
 }, [mintedNFTId, fetchClaimedMetadata])
 
-console.log('nftid', mintedNFTId)
-console.log('claimedMetadata', claimedMetadata)
-
 const claimedNFTModalData = useMemo(
   () => ({
       metadata: mintedMetadata,
@@ -106,7 +104,6 @@ const claimedNFTModalData = useMemo(
           claimedMetadataStatus === 'success' ||
           claimedMetadataStatus === 'error'
       ) {
-        console.log('claimedMetadataStatus', claimedMetadataStatus)
           setMintedNFTId(undefined)
 
           setMintedMetadata({
@@ -118,7 +115,6 @@ const claimedNFTModalData = useMemo(
           queryClient.setQueryData( 
               ['userNfts', address],
               (oldData: null | undefined | GetNfts) => {
-                console.log('oldData', oldData)
                   if (oldData?.data) {
                       return {
                           ...oldData,
@@ -141,23 +137,19 @@ const claimedNFTModalData = useMemo(
                 //  queryClient,
                   address,
               ])
-
-    console.log('state.receiptData', state.receiptData)
     
-    console.log(mintedNFTId)
+
     useEffect(() => {
-      console.log('state.receiptData from use effect',state.receiptData)
       const data = state.receiptData
-      console.log('state.receiptData status from use effect',state.receiptData?.status)
       if (data?.status === 'success') {  
           const logsWithId = data?.logs?.find((item) => item.data === '0x')
           setMintedNFTId(
-              logsWithId?.topics?.[3]
-                  ? fromHex(logsWithId?.topics?.[3]!, 'number')
+            // @ts-ignore
+              logsWithId?.topics?.[3] // @ts-ignore 
+                  ? fromHex(logsWithId?.topics?.[3]!, 'number') 
                   : undefined
           )
-          console.log(fromHex(logsWithId?.topics?.[3]!, 'number'))
-          console.log('mintedNFTId', mintedNFTId)
+          MintNFTActive(false);
       }
   }, [state.receiptData])
 
@@ -168,7 +160,6 @@ const claimedNFTModalData = useMemo(
     dispatch(undefined)
 }, [address, dispatch])
 
-  console.log("claimedNFTModalData", claimedNFTModalData)
   return (
     <nav
             ref={navRef}
@@ -177,7 +168,7 @@ const claimedNFTModalData = useMemo(
   
       <button className="button"
         disabled={!isConnected || isPending ||
-          state.isLoading
+          state.isLoading || !isSectionActive
         } 
         type="submit"
       >

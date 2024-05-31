@@ -1,10 +1,15 @@
 import {
     PetStartAttributes,
-} from '../../types/gameDataAPI'
+} from '../../types/gameConstantsAPI'
 
-//also have to reset it in the GameOver scene!
-export var petStartAttributes: PetStartAttributes  = {
-    mood: 6,
-    actionsDone: 0,
+
+export var petAttributes: PetStartAttributes  = {
+    mood: null,
+    actionsDone: null,
     currentAction: null, 
+}
+
+
+export function initializePetAttributes(startAttributes: PetStartAttributes) {
+    petAttributes = { ...startAttributes };
 }

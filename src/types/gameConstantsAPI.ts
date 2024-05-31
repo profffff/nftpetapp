@@ -46,6 +46,11 @@ export interface ActionsDelay {
     waitingTimeForActionPenalty: number;
 }
 
+export interface PetStartAttributes  {
+    mood: number | null,
+    actionsDone: number | null,
+    currentAction: string | null, 
+}
 
 
 

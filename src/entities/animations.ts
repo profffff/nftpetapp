@@ -124,6 +124,7 @@ export class Animations  {
 
         this.wantText = this.scene.add.bitmapText(x - 45, y - 55, 'digital-font', 'I need ' + action?.slice(0,-6)).setScale(0.7).setDepth(21);
         this.wantText.setTint(0x000000); 
+
     }
 
     public stopPetWantsAnimation() {

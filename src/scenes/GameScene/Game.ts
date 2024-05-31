@@ -2,6 +2,7 @@ import { GameObjects, Scene } from 'phaser';
 import { EventBus } from '../../game/EventBus';
 
 import * as Constant from '../../values/constants/gameConstants'
+import {petAttributes, initializePetAttributes} from '../../values/variables/gameData'
 
 import Button from '../../components/buttons/gameButton'
 import Timer from '../../components/timer/gameTimer'
@@ -10,6 +11,7 @@ import {sceneManager} from '@/src/entities/sceneManager';
 
 import Actions from '../../entities/actions'
 import {Pet} from '../../entities/pet'
+import { Container } from 'postcss';
 
 
 export class MainMenu extends Scene
@@ -20,6 +22,8 @@ export class MainMenu extends Scene
     logoTween: Phaser.Tweens.Tween | null;
     text1: GameObjects.Text;
     playerImage: string;
+    rewardDialog: Phaser.GameObjects.Container;
+    isGamePaused: boolean;
 
     private pet?: Pet;
     private timer?: Timer;
@@ -35,15 +39,22 @@ export class MainMenu extends Scene
     init(choosenPlayerImage: string)   
      {
         this.playerImage = choosenPlayerImage;
+        initializePetAttributes(Constant.petStartAttributes);
+        sceneManager.setSeconds(0);
+        sceneManager.setAnimationPlayed(false);
+        this.events.removeListener('timerFinished'); //important!!
+        this.events.removeListener('penaltyTimerFinished');
+        this.isGamePaused = false;
      }
 
     preload()
-    {
-        
+    {     
+        //!!!
     }
 
     create ()
     {      
+
         this.add.image(0, 0, 'background').setOrigin(0).setDepth(0);
         
        if (!this.textures.exists(this.playerImage)) {
@@ -59,7 +70,7 @@ export class MainMenu extends Scene
             align: 'center'
         }).setOrigin(0.5).setDepth(10);
 
-        this.add.text(605, 7, 'Reward after actions = 10 && mood > 8 v0.03', {
+        this.add.text(570, 7, 'Reward after actions = 15 && mood = good v0.03', {
             color: '#000000', align: 'center'
         }).setDepth(10);
 
@@ -70,25 +81,41 @@ export class MainMenu extends Scene
             this.actions?.setWaitingTimer();
         }
 
-        this.handleKeyValue = (key) => {     
-            this.actions?.removeWaitingTImers();
-            this.actions = new Actions(key, this.timer);           
-            const isPressedButtonCorrect = this.actions.getIsCorrectButton();
-            this.pet.moodAnimation();
-            if (isPressedButtonCorrect) {
-                this.pet.stopWantsAnimation();
-                sceneManager.setAnimationPlayed(false);
-                if (this.actions?.getBackgroundManager()) {
-                    const crtDelay = this.actions.getCrtDelay();
-                    this.pet.showBackground(this.actions.getBackgroundManager(), crtDelay);
+
+
+        this.handleKeyValue = (key) => {    
+            if (!this.isGamePaused) { 
+                console.log('actionz', this.actions)
+                console.log('z tyt', this.actions?.removeWaitingTImers())
+                this.actions?.removeWaitingTImers();
+                this.actions = new Actions(key, this.timer);           
+                const isPressedButtonCorrect = this.actions.getIsCorrectButton();
+                this.pet.moodAnimation();
+                if (isPressedButtonCorrect) {
+                    this.pet.stopWantsAnimation();
+                    sceneManager.setAnimationPlayed(false);
+                    if (this.actions.getIsGameFinished())
+                        {   
+                            this.isGamePaused = true;
+                            this.Reward();
+                        }
+                    else 
+                    {                      
+                        if (this.actions?.getBackgroundManager()) {
+                            const crtDelay = this.actions.getCrtDelay();
+                            this.pet.showBackground(this.actions.getBackgroundManager(), crtDelay);
+                        }
+                    }
                 }
-            }
-            else {
-                if (this.timer.getCurrentSeconds() === 0) {
-                    this.pet.showWrongButtonBackground();
+                else {
+                    if (this.timer.getCurrentSeconds() === 0) {
+                        this.pet.showWrongButtonBackground();
+                    }
                 }
             }
         };
+
+       
 
         const buttons = [
             { name: 'playAction', texture: 'playIcon', number: 1 },
@@ -140,12 +167,6 @@ export class MainMenu extends Scene
         this.actions?.setWaitingTimer();
     }
 
-
-    update(time: number, delta: number): void
-    {
-
-    }
-
     loadNFTCollectionScene(nftArray: { tokenId: string | undefined; image: string | undefined; name: string | undefined }[])
     {
         sceneManager.setSeconds(this.timer.getCurrentSeconds())
@@ -155,6 +176,44 @@ export class MainMenu extends Scene
 
         this.scene.start('NFTCollectionScene', {nftArray: nftArray});      
     }
+
+   
+    private Reward() {
+    this.rewardDialog = this.add.container(Constant.gameWindowConfig.width / 2, Constant.gameWindowConfig.width / 2 - 130)
+    .setDepth(1000)
+
+    const popup = this.add.sprite(0,0, 'rewardDialog')
+    .setScale(0.5)
+    
+    this.rewardDialog.add(popup);
+
+    const claimButton = this.add.sprite(100, 252, 'claimRewardIcon')
+    .setDepth(1)
+    .setScale(0.3)
+    .setInteractive()
+    .on(Phaser.Input.Events.GAMEOBJECT_POINTER_DOWN, this.claimNftAction, this);
+
+    const declineButton = this.add.sprite(-100, 252, 'declineRewardIcon')
+    .setDepth(1)
+    .setScale(0.3)
+    .setInteractive()
+    .on(Phaser.Input.Events.GAMEOBJECT_POINTER_DOWN, this.continueGame, this);
+
+    this.rewardDialog.add(claimButton);
+    this.rewardDialog.add(declineButton);
+    }
+
+    private claimNftAction() {
+        EventBus.emit('mintNFT');
+        this.scene.restart();
+    }
+
+    private continueGame() {
+        this.actions.setIsGameFinished(false)    
+        this.scene.restart();
+    }
+
+
 
 }
 

@@ -1,6 +1,6 @@
 // bridge between React and Phaser
 
-import { forwardRef, useEffect, useLayoutEffect, useRef } from 'react';
+import { forwardRef, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import StartGame from './main';
 import { EventBus } from './EventBus';
 
@@ -12,10 +12,14 @@ export interface IRefPhaserGame
 
 interface IProps
 {
+    MintNFTActive?: (value: boolean) => void;
     currentActiveScene?: (scene_instance: Phaser.Scene) => void;
+    
 }
 
-export const PhaserGame = forwardRef<IRefPhaserGame, IProps>(function PhaserGame({ currentActiveScene }, ref)
+export const PhaserGame = forwardRef<IRefPhaserGame, IProps>(function PhaserGame(
+    { MintNFTActive, currentActiveScene
+ }, ref)
 {
     const game = useRef<Phaser.Game | null>(null!);
 
@@ -68,15 +72,22 @@ export const PhaserGame = forwardRef<IRefPhaserGame, IProps>(function PhaserGame
             {
                 ref.current = { game: game.current, scene: scene_instance };
             }
-            
-
-        
+ 
         });
+
+
+        EventBus.on('mintNFT', () => {
+            console.log('Player won1!');
+            MintNFTActive(true);     
+        });
+
+
         return () =>
         {
             EventBus.removeListener('current-scene-ready');
         }
     }, [currentActiveScene, ref]);
+
 
     return (
         <div id="game-container"></div>

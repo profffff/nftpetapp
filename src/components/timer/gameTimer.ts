@@ -183,6 +183,7 @@ export default class Timer {
 
 
     penaltyTimerCompleted() {
+        console.log(this.waitingTimer)
         this.scene.events.emit('penaltyTimerFinished');
         if (this.warningMessage)
             this.warningMessage.destroy();
@@ -193,9 +194,12 @@ export default class Timer {
 
 
     stopTimers() {
+        console.log(this.waitingTimer)
         this.scene.time.removeEvent(this.waitingTimer)
+
         if (this.warningMessageTween)
             this.warningMessageTween.remove()
+
         if (this.warningMessage)
             this.warningMessage.destroy();
         

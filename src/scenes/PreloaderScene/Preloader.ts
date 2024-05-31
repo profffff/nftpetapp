@@ -1,5 +1,10 @@
 import { Scene } from 'phaser';
 
+import {petStartAttributes} from '../../values/constants/gameConstants'
+import {initializePetAttributes} from '../../values/variables/gameData'
+
+import {sceneManager} from '../../entities/sceneManager'
+
 export class Preloader extends Scene
 {
     constructor ()
@@ -18,6 +23,7 @@ export class Preloader extends Scene
         this.load.setPath('assets');
         this.load.image('nft_default', '/art/pet/petImage/petDefault.png');
         this.load.image('background', 'bg.png');
+        this.load.image('star', 'star.png');
 
         //buttons-actions
         this.load.image('eatIcon', '/art/button/buttonsImage/eatIcon.png');
@@ -27,7 +33,14 @@ export class Preloader extends Scene
         this.load.image('toiletIcon', '/art/button/buttonsImage/toiletIcon.png');
         this.load.image('drinkIcon', '/art/button/buttonsImage/drinkIcon.png');
         this.load.image('buttonDownIcon', '/art/button/buttonsImage/buttonDownIcon.png');
-        this.load.image('star', 'star.png');
+        this.load.image('claimRewardIcon', '/art/button/buttonsImage/claimAwardButton.png');
+        this.load.image('declineRewardIcon', '/art/button/buttonsImage/declineAwardButton.png')
+        
+        //dialog
+        this.load.image('rewardDialog', '/art/dialog/award/nftAwardBackground.png');
+        this.load.spritesheet('wantThink', '/art/dialog/wantAnimation/wantAnimationSheet.png',
+        { frameWidth: 183, frameHeight: 183 }
+        )
 
         //actions-background
         this.load.image('wrongButtonBackground', '/art/window/wrongButtonBackground/WrgBtnBack.png');
@@ -38,10 +51,7 @@ export class Preloader extends Scene
         //animations
         this.load.image('angryMouth', 'art/pet/petMood/Angry/angryMouth.png');
         this.load.image('sadMouth', 'art/pet/petMood/Sad/sadMouth.png');
-        this.load.spritesheet('wantThink', '/art/dialog/wantAnimation/wantAnimationSheet.png',
-        { frameWidth: 183, frameHeight: 183 }
-        )
-
+        
         //timer
         this.load.image('black-layer', '/art/timer/black-layer.png');
         this.load.image('second-layer', '/art/timer/second-layer.png');
@@ -53,6 +63,8 @@ export class Preloader extends Scene
     create ()
     {
         
+        
+
         this.scene.start('MainMenu');
     }
 

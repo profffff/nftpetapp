@@ -39,7 +39,6 @@ export default class Button extends Phaser.GameObjects.Image
 		this.setInteractive()
 			.on(Phaser.Input.Events.GAMEOBJECT_POINTER_UP, this.handleUp, this)
 			.on(Phaser.Input.Events.GAMEOBJECT_POINTER_OUT, this.handleOut, this)
-			//.on(Phaser.Input.Events.GAMEOBJECT_POINTER_DOWN, this.handleDown, this)
 			.on(Phaser.Input.Events.GAMEOBJECT_POINTER_DOWN, (pointer) => {
 				this.handleDown(pointer, this.buttonKey );
 			}, this)

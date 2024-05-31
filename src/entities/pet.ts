@@ -2,7 +2,7 @@ import { Animations } from "./animations";
 
 
 import {
-    petStartAttributes,
+    petAttributes,
 } from '../values/variables/gameData'
 
 
@@ -22,13 +22,13 @@ export class Pet extends Phaser.GameObjects.Sprite {
 
         this.animation = new Animations(scene, x, y, this);
 
-        this.mood = petStartAttributes.mood;
-        this.actionsDone = petStartAttributes.actionsDone;  
+        this.mood = petAttributes.mood;
+        this.actionsDone = petAttributes.actionsDone;  
     }
 
     public playWantsAnimation()
     {   
-        this.animation.petWantsAnimation(this.x + 180, this.y - 200, petStartAttributes.currentAction)
+        this.animation.petWantsAnimation(this.x + 180, this.y - 200, petAttributes.currentAction)
     }
 
     public stopWantsAnimation()
@@ -50,13 +50,13 @@ export class Pet extends Phaser.GameObjects.Sprite {
 
 
     public moodAnimation() {
-        console.log('cur mood', petStartAttributes.mood)
-        if (this.mood === petStartAttributes.mood) {
+        console.log('cur mood', petAttributes.mood)
+        if (this.mood === petAttributes.mood) {
             //nothing
         }      
         else {
             
-                this.mood = petStartAttributes.mood
+                this.mood = petAttributes.mood
                 switch (this.mood) {
                     case 0:
                         //dead

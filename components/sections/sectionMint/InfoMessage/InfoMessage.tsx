@@ -27,10 +27,6 @@ const InfoMessage = ({
 }: IProps) => {
 
 
-
-
-
-
     if (isNoTokens) {
         return <>Out of NFT! Wait fot the new drop or contact the admin </>
     }
@@ -80,10 +76,6 @@ const InfoMessage = ({
             </>
         )
 
-
-
-    
-
      if (!isWalletConnected )
          return <>Wallet isn&apos;t connected!</>
 
@@ -95,7 +87,7 @@ const InfoMessage = ({
     //     return <> Error: Not enough balance.</>
     // }
 
-    return <>Ready for minting</>
+    return <>Raise your pet and earn an NFT as a reward.</>
 }
 
 export default InfoMessage

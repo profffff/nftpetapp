@@ -6,7 +6,8 @@ import {
     NumOfButtons,
     ActionProbabilies,
     ActionsDelay,
-    TimerIcon
+    TimerIcon,
+    PetStartAttributes
 } from '../../types/gameConstantsAPI'
 
 export const gameWindowConfig: GameWindowConfig = {
@@ -18,13 +19,6 @@ export const petImage: PetImage = {
     imagePositionX: gameWindowConfig.width / 2,
     imagePositionY: gameWindowConfig.height / 2 + 50,
     imageScale: 0.55,
-}
-
-export const gameSettings: GameSettings = {
-    minWinMood: 8,
-    maxNumActions: 5,
-    maxMood: 10,
-    probIncMood: 40,
 }
 
 export const numOfButtons: NumOfButtons  = {
@@ -57,9 +51,20 @@ export const actionProbabilities: ActionProbabilies =
 export const actionsDelay: ActionsDelay  = {
     minTimeBeforeActon: 10,
     maxTimeBeforeActon: 20,
-    waitingTimeForActionLite: 2,
-    waitingTimeForActionWarning: 4,
-    waitingTimeForActionPenalty: 6,
+    waitingTimeForActionLite: 20,
+    waitingTimeForActionWarning: 40,
+    waitingTimeForActionPenalty: 60,
 }
 
+export const petStartAttributes: PetStartAttributes  = {
+    mood: 6, 
+    actionsDone: 0,
+    currentAction: null, 
+}
 
+export const gameSettings: GameSettings = {
+    minWinMood: 8, 
+    maxNumActions: 15, 
+    maxMood: 10,
+    probIncMood: 40,
+}
