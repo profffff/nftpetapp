@@ -14,7 +14,6 @@ interface IProps
 {
     MintNFTActive?: (value: boolean) => void;
     currentActiveScene?: (scene_instance: Phaser.Scene) => void;
-    
 }
 
 export const PhaserGame = forwardRef<IRefPhaserGame, IProps>(function PhaserGame(
@@ -30,7 +29,6 @@ export const PhaserGame = forwardRef<IRefPhaserGame, IProps>(function PhaserGame
     
                 game.current = StartGame("game-container");
                
-    
                 if (typeof ref === 'function')
                 {
                     ref({ game: game.current, scene: null });
@@ -60,9 +58,7 @@ export const PhaserGame = forwardRef<IRefPhaserGame, IProps>(function PhaserGame
         {
             if (currentActiveScene && typeof currentActiveScene === 'function')
             {
-
                 currentActiveScene(scene_instance);
-
             }
 
             if (typeof ref === 'function')
@@ -75,12 +71,9 @@ export const PhaserGame = forwardRef<IRefPhaserGame, IProps>(function PhaserGame
  
         });
 
-
         EventBus.on('mintNFT', () => {
-            console.log('Player won1!');
             MintNFTActive(true);     
         });
-
 
         return () =>
         {
@@ -92,14 +85,6 @@ export const PhaserGame = forwardRef<IRefPhaserGame, IProps>(function PhaserGame
     return (
         <div id="game-container"></div>
     );
-
-
-
-
-
-    
-
-
 });
 
 export { PhaserGame as default  };

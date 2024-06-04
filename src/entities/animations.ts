@@ -66,37 +66,24 @@ export class Animations  {
 
     public petHappyAnimation () 
     {     
-            this.petAnimation = this.scene.tweens.add({
-                targets: this.petImage,
-                x: { value: [290, 710], duration: 1500, ease: 'Sine.easeOut' },
-                y: { value: 310, duration: 720, ease: 'Sine.easeOut' },
-                yoyo: true,
-                repeat: -1,
-                onRepeat: () => {
-                    this.petImage.setFlipX(true);
-                },
-                onYoyo: () => {
-                    this.petImage.setFlipX(false);
-                },
-            });
-            this.petAnimation.play();
-        
+        this.petAnimation = this.scene.tweens.add({
+            targets: this.petImage,
+            x: { value: [290, 710], duration: 1500, ease: 'Sine.easeOut' },
+            y: { value: 310, duration: 720, ease: 'Sine.easeOut' },
+            yoyo: true,
+            repeat: -1,
+            onRepeat: () => {
+                this.petImage.setFlipX(true);
+            },
+            onYoyo: () => {
+                this.petImage.setFlipX(false);
+            },
+        });
+        this.petAnimation.play(); 
     }
 
-
     public petWantsAnimation(x: number, y: number, action:string) {
-
-        // const petWantsAnimation = this.scene.anims.create({
-        //     key: 'want',
-        //     frames: [
-        //         { key: 'wantThink1' },
-        //         { key: 'wantThink2' },
-        //         { key: 'wantThink3', duration: 10000 + Math.random() * 5000 },
-        //     ],
-        //     frameRate: 6,
-        //     repeat: -1,
-        // });
-
+        
         this.petWantAnimation = this.scene.anims.create({
             key: 'want',
             frames: this.scene.anims.generateFrameNumbers('wantThink',
@@ -180,12 +167,4 @@ export class Animations  {
             this.petMoodSad = this.scene.add.sprite(this.x, this.y, 'sadMouth').setDepth(100);
         }, [], this);   
     }
-
-   
-
-
-
-
-
-
 }

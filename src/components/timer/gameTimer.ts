@@ -35,7 +35,7 @@ export default class Timer {
 
         this.shape = this.scene.make.graphics();
         this.shape.fillStyle(0xffffff);
-        this.shape.slice(this.secondLayer.x, this.secondLayer.y, this.secondLayer.displayWidth / 2, Phaser.Math.DegToRad(270), Phaser.Math.DegToRad(0), true);
+        this.shape.slice(this.secondLayer.x, this.secondLayer.y, this.secondLayer.displayWidth / 2, Phaser.Math.DegToRad(360), Phaser.Math.DegToRad(0), true);
         this.shape.fillPath();
 
         this.mask = this.shape.createGeometryMask();
@@ -44,11 +44,9 @@ export default class Timer {
         this.seconds = startTime ? startTime : 0;
 
         this.timerText = this.scene.add.bitmapText(x, y, 'digital-font', this.seconds.toString()).setScale(1.5).setOrigin(0.5);
-        this.timerText.setTint(timerDigitsColor); //0xFE0101 red
+        this.timerText.setTint(timerDigitsColor); 
 
-       
-
-       this.timeEvent = scene.time.addEvent({
+        this.timeEvent = scene.time.addEvent({
             delay: 1000,                
             callback: this.timeEventCallback,
             callbackScope: this,
@@ -89,16 +87,18 @@ export default class Timer {
             }
         });
     }
-    pause(){
+
+    pause() {
         this.timeEvent.paused = true;
         this.counter.pause();
     }
-    resume(){
+
+    resume() {
         this.timeEvent.paused = false;
         this.counter.resume();
     }
     
-    scaleTweenWarning(){
+    scaleTweenWarning() {
         this.scene.tweens.add({
             targets: this.timerText,
             scaleX: [1.5, 3], 
@@ -113,27 +113,11 @@ export default class Timer {
             onComplete: () => {
                 this.timerText.setTint(timerDigitsColor);
             }        
-        });
-        
+        });    
     }
 
     getCurrentSeconds(): number {
         return this.seconds;
-    }
-
-
-    liteTimer() {   
-        this.waitingTimer = this.scene.time.addEvent({
-            delay: actionsDelay.waitingTimeForActionLite * 1000,               
-            callback: this.liteTimerCompleted,
-            callbackScope: this,
-            loop: false
-        });
-        
-    }
-
-    liteTimerCompleted() {
-        this.warningTimer();
     }
 
     warningTimer() {
@@ -148,13 +132,11 @@ export default class Timer {
     warningTimerCompleted() {
         this.warningMessage = this.scene.add.bitmapText( this.posX + 130, this.posY - 50, 'digital-font', 'Don\'t keep the pet waiting!');
         this.warningMessage.setTint(yellowColor);
-
         this.showWarningMessage();
-
         this.penaltyTimer();
     }
     
-    showWarningMessage(repeatTimes: number = -1){     
+    showWarningMessage(repeatTimes: number = -1) {     
         this.warningMessageTween = this.scene.tweens.add({
             targets: this.warningMessage,
             scaleX: [1, 1.3], 
@@ -180,10 +162,7 @@ export default class Timer {
         });
     }
 
-
-
     penaltyTimerCompleted() {
-        console.log(this.waitingTimer)
         this.scene.events.emit('penaltyTimerFinished');
         if (this.warningMessage)
             this.warningMessage.destroy();
@@ -192,19 +171,14 @@ export default class Timer {
         this.showWarningMessage(5); 
     }
 
-
     stopTimers() {
-        console.log(this.waitingTimer)
         this.scene.time.removeEvent(this.waitingTimer)
 
         if (this.warningMessageTween)
             this.warningMessageTween.remove()
 
         if (this.warningMessage)
-            this.warningMessage.destroy();
-        
+            this.warningMessage.destroy();      
     }
-     
-
-    
+       
 }

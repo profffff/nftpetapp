@@ -1,9 +1,3 @@
-// Components
-import { LoaderDots } from '@/components'
-
-// Types
-import { IMintedMetadata } from '@/types'
-
 interface IProps {
     isPrepareLoading: boolean
     prepareError: string | null
@@ -52,7 +46,6 @@ const InfoMessage = ({
             <>
                 <span>
                     Executing your transaction. Please wait
-                    <LoaderDots />
                 </span>
             </>
         )
@@ -72,16 +65,11 @@ const InfoMessage = ({
         return (
             <>
                 Waiting for the receipt
-                <LoaderDots />
             </>
         )
 
      if (!isWalletConnected )
          return <>Wallet isn&apos;t connected!</>
-
-    // if (isWalletConnected)
-    //     return <>You should choose Amoy testnet and 
-    //     have enough MATIC in your account to mint nft! </>
 
     // if (!isEnoughBalanceToMint) {
     //     return <> Error: Not enough balance.</>

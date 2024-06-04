@@ -1,16 +1,11 @@
 import { useReducer } from 'react'
-import { BaseError, parseEther, parseUnits } from 'viem'
-import { useConfig, useReadContract, useWaitForTransactionReceipt } from 'wagmi'
+import { BaseError, parseEther, parseUnits, TransactionReceipt } from 'viem'
+import { useConfig } from 'wagmi'
 import {
     simulateContract,
     writeContract,
-    waitForTransactionReceipt,
-    getTransactionReceipt,
-    
+    waitForTransactionReceipt
 } from '@wagmi/core'
-
-
-import { TransactionReceipt } from 'viem'
 
 // Contract
 import { contractConfig } from '@/contract'
@@ -20,8 +15,6 @@ import { useMintReducer } from '@/reducers'
 
 // Utilities
 import { toErrorWithMessage } from '@/utils'
-
-import {QueryClient} from '@tanstack/react-query'
 
 const maxTokens =  process.env.NEXT_PUBLIC_NFT_SUPPLY as string
 
@@ -70,7 +63,6 @@ const useMint = () => {
             prepareLoading = true
             dispatch({ isPrepareLoading: true })
         
-
             const result = await simulateContract(config, {
                 ...contractConfig,
                 functionName: 'claim',
@@ -89,18 +81,16 @@ const useMint = () => {
                ],
                 value: parseEther("0"),
             })
-            
-        
 
             prepareLoading = false
             writeLoading = true
+
             dispatch({
                 isPrepareLoading: false,
                 isPrepareSuccess: true,
                 isWriteLoading: true,
             })
-
-           
+          
             const writeResult = await writeContract(config, result.request)
 
             writeLoading = false
@@ -115,17 +105,14 @@ const useMint = () => {
                 hash: writeResult,
             }) as TransactionReceipt;
 
- 
-
             receiptLoading = false
-
-            
 
             dispatch({
                 isReceiptLoading: false,
                 isReceiptSuccess: data?.status === 'success',
                 receiptData: data,
             })
+    
         } catch (error: unknown) {
             //alert(error)
             console.error(error);

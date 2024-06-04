@@ -1,7 +1,7 @@
 import { Scene } from 'phaser';
 import { EventBus } from '../../game/EventBus';
 
-//plugin
+//UI plugin
 import RexUIPlugin from 'phaser3-rex-plugins/templates/ui/ui-plugin.js';
 
 const COLOR_MAIN = 0x4e342e;
@@ -21,7 +21,7 @@ export class NFTCollectionScene extends Scene
     
     nftArray = [];
 
-    constructor ()
+    constructor()
     {
         super({key: 'NFTCollectionScene'});
     }
@@ -31,9 +31,9 @@ export class NFTCollectionScene extends Scene
             image: string | undefined; 
             name: string | undefined }[] 
         })   
-     {
+    {
         this.nftArray = data.nftArray;
-     }
+    }
 
     preload ()
     {   
@@ -44,13 +44,8 @@ export class NFTCollectionScene extends Scene
         }
     }
 
-    
-
     create ()
     {   
-        EventBus.emit('current-scene-ready', this);
-
-
         this.pageTitle = this.add.text(500, 50, 'Your NFT collection:', {
             fontFamily: 'Arial Black', fontSize: 25, color: '#ffffff',
             stroke: '#000000', strokeThickness: 8,
@@ -78,44 +73,32 @@ export class NFTCollectionScene extends Scene
                 }),
                 
             },
-
             mouseWheelScroller: {
                 focus: false,
                 speed: 0.2,
             },
-
             space: {
                 top: 80,
                 bottom: 20,
-                panel: 0}
-                
-         
+                panel: 0
+            }
         })
             .layout()
 
-        var print = this.add.text(0, 0, '');
-        panel.setChildrenInteractive({
-            
+        panel.setChildrenInteractive({     
         })
             .on('child.click', function (child) {
-                print.text += `Click ${child.name}`;
                 let choosenPlayerImage = child.name;
-                console.log(`Click ${choosenPlayerImage}`); 
-               
-                this.scene.scene.start('MainMenu', choosenPlayerImage);
-                          
-                if (child.isInTouching('actions[0]')) {
-                    print.text += `'s action button`;
-                }
-                print.text += '\n';
+                this.scene.scene.start('MainMenu', choosenPlayerImage);         
             })      
+    
+        EventBus.emit('current-scene-ready', this);
     }
 
         changeSceneToMainMenu()
         {
             this.scene.start('MainMenu');
         }   
-        
     }
     
     var CreatePanel = function (scene, items) {
@@ -132,31 +115,25 @@ export class NFTCollectionScene extends Scene
                             i, 
                             items[i].name              
                          ),
-                        { expand: true,
-
-                         }
+                        { expand: true, }
                     )
             }   
         }
         else {
             panel
-                    .add(
-                        CreateItem(scene, 
-                            "default", 
-                            "Default",
-                        ),
-                        { expand: true,
-                         }
-                    )
+                .add(
+                    CreateItem(scene, 
+                        "default", 
+                        "Default",
+                    ),
+                    { expand: true, }
+                )
         }
-       
         return panel;
     }
     
-    
-    var CreateItem = function (scene, curImage, name) {
-              
-        var iconSize =  20 ;
+    var CreateItem = function (scene, curImage, name) {     
+        var iconSize =  20;
         var item = scene.rexUI.add.dialog({
             width: 100,
             height: 100,
@@ -174,8 +151,7 @@ export class NFTCollectionScene extends Scene
             }),
             
             content: scene.rexUI.add.label({
-                space: { left: 10, right: 10, top: 10, bottom: 10 },
-                
+                space: { left: 10, right: 10, top: 10, bottom: 10 },  
                 text: scene.add.text(0, 0, 'CLICK TO SELECT'),
             }),
     
@@ -198,16 +174,11 @@ export class NFTCollectionScene extends Scene
     
             align: {
                 actions: 'right'
-            },
-    
-            
+            },      
         })
         return item;
     }
 
-
-   
-    
       
 export {NFTCollectionScene as default}
 

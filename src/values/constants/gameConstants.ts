@@ -51,20 +51,19 @@ export const actionProbabilities: ActionProbabilies =
 export const actionsDelay: ActionsDelay  = {
     minTimeBeforeActon: 10,
     maxTimeBeforeActon: 20,
-    waitingTimeForActionLite: 20,
-    waitingTimeForActionWarning: 40,
+    waitingTimeForActionWarning: 60,
     waitingTimeForActionPenalty: 60,
 }
 
 export const petStartAttributes: PetStartAttributes  = {
-    mood: 6, 
+    mood: 8, 
     actionsDone: 0,
     currentAction: null, 
 }
 
 export const gameSettings: GameSettings = {
     minWinMood: 8, 
-    maxNumActions: 15, 
+    maxNumActions: 1, 
     maxMood: 10,
     probIncMood: 40,
 }

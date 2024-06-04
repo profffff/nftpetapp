@@ -1,6 +1,5 @@
 import { Animations } from "./animations";
 
-
 import {
     petAttributes,
 } from '../values/variables/gameData'
@@ -48,44 +47,41 @@ export class Pet extends Phaser.GameObjects.Sprite {
         this.animation.showBackground(backgroundKey, animationDuration)
     }
 
-
     public moodAnimation() {
-        console.log('cur mood', petAttributes.mood)
         if (this.mood === petAttributes.mood) {
             //nothing
         }      
         else {
-            
-                this.mood = petAttributes.mood
-                switch (this.mood) {
-                    case 0:
-                        //dead
-                        break;
-                    case 1:
-                    case 2:
-                        this.animation.disableAllAnimations();
-                        this.animation.setAngryMood();
-                        break;
-                    case 3:
-                    case 4:
-                        this.animation.disableAllAnimations();
-                        this.animation.setSadMood();
-                        break;
-                    case 5:   
-                    case 6:
-                        this.animation.disableAllAnimations();
-                        break
-                    case 7:
-                    case 8:
-                        this.animation.disableAllAnimations();
-                        this.animation.petInGoodMoodAnimation();
-                        break;
-                    case 9:
-                    case 10:
-                        this.animation.disableAllAnimations();
-                        this.animation.petHappyAnimation();
-                        break;
-                }
+            this.mood = petAttributes.mood
+            switch (this.mood) {
+                case 0:
+                    //dead
+                    break;
+                case 1:
+                case 2:
+                    this.animation.disableAllAnimations();
+                    this.animation.setAngryMood();
+                    break;
+                case 3:
+                case 4:
+                    this.animation.disableAllAnimations();
+                    this.animation.setSadMood();
+                    break;
+                case 5:   
+                case 6:
+                    this.animation.disableAllAnimations();
+                    break
+                case 7:
+                case 8:
+                    this.animation.disableAllAnimations();
+                    this.animation.petInGoodMoodAnimation();
+                    break;
+                case 9:
+                case 10:
+                    this.animation.disableAllAnimations();
+                    this.animation.petHappyAnimation();
+                    break;
+            }
         }
     }
     

@@ -1,6 +1,4 @@
 import Phaser from 'phaser'
-import Actions from '../../entities/actions'
-
 
 const WHITE = 0xffffff
 
@@ -34,8 +32,6 @@ export default class Button extends Phaser.GameObjects.Image
 		this.disabledTint = tint
 		this.buttonKey = buttonKey
 		
-		
-
 		this.setInteractive()
 			.on(Phaser.Input.Events.GAMEOBJECT_POINTER_UP, this.handleUp, this)
 			.on(Phaser.Input.Events.GAMEOBJECT_POINTER_OUT, this.handleOut, this)
@@ -46,7 +42,7 @@ export default class Button extends Phaser.GameObjects.Image
 	}
 
 	
-	 setKeyValueCallback(callback: (key: string) => void) {
+	setKeyValueCallback(callback: (key: string) => void) {
         this.handleKeyValue  = callback;
     }
 

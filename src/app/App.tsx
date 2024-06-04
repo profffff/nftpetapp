@@ -1,36 +1,24 @@
 import { useRef, useState } from 'react';
 import { createWeb3Modal } from '@web3modal/wagmi/react'
-
 import { http, createConfig, WagmiProvider, useAccount } from 'wagmi'
-import { mainnet } from 'wagmi/chains'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { defineChain } from 'viem'
-import { walletConnect, injected, coinbaseWallet, metaMask } from 'wagmi/connectors'
+import { injected, metaMask } from 'wagmi/connectors'
 
 import { IRefPhaserGame, PhaserGame } from '../game/PhaserGame';
-import { MainMenu } from '../scenes/GameScene/Game';
 
-import type { AppProps } from "next/app";
-
-
-// Components
 import {
     NavSection,
     MintNftSection,
     NFTCollectionSection
 } from '@/components'
-import NFTCollectionScene from '../scenes/NFTCollectionScene';
-
-// Hooks
-//import { useIsMounted } from '@/hooks'
 
 const RPC_PUBLIC = process.env.NEXT_PUBLIC_RPC_PUBLIC as string
 const CHAIN_ID = process.env.NEXT_PUBLIC_CHAIN_ID as string
 const WALLET_CONNECT_PROJECT_ID = process.env
     .NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID as string
 const ALCHEMY_ID = process.env.NEXT_PUBLIC_ALCHEMY as string
-const projectId =  process.env.NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID as string
-
+const projectIdd =  process.env.NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID as string
 
 const queryClient = new QueryClient()
 
@@ -72,13 +60,6 @@ const preferredChain = defineChain({
     testnet: true,
 })
 
-const metadata = {
-    name: 'nftpet',
-    description: 'nftpet',
-    url: 'https://nftpet.cloudns.be', 
-    icons: ['https://avatars.githubusercontent.com/u/37784886']
-  }
-
   const config = createConfig({
     chains: [preferredChain],
     transports: {
@@ -98,7 +79,7 @@ const metadata = {
   })
 
   createWeb3Modal({
-    projectId: projectId,
+    projectId: projectIdd,
     wagmiConfig: config,
     enableAnalytics: false, 
     enableOnramp: false 
@@ -112,7 +93,6 @@ function App()
     const [mintNFTActive, setmintNFTActive] = useState(false);
 
     const phaserRef = useRef<IRefPhaserGame | null>(null);
-    console.log('nftactivefromapp', mintNFTActive);
     const addSprite = () => {
 
         if (phaserRef.current)
@@ -148,9 +128,7 @@ function App()
     }
 
     const onMintNFTActive = (value: boolean) => {
-        console.log('z tyt')
         setmintNFTActive(value);
-
     }
 
     return (

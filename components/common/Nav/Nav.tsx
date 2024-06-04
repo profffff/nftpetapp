@@ -1,10 +1,4 @@
-import { useRef, useState } from 'react'
-
-import clsx from 'clsx'
-
-import type { Dispatch, SetStateAction } from 'react'
-
-// Hooks
+import { useRef } from 'react'
 
 // Components
 import { ConnectButton, 
@@ -13,24 +7,11 @@ import { ConnectButton,
 
 const Nav = () => {
     const navRef = useRef<HTMLElement>(null)
-   
-
-    
-
-
     return (
-        <nav
-            ref={navRef}
-        >
-            <div>
-                
-              <ConnectButton/>
-
-        
-       
+        <nav ref={navRef}>
+            <div> 
+              <ConnectButton/>   
             </div>
-
-
         </nav>
     )
 }

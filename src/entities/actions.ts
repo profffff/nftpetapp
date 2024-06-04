@@ -1,7 +1,6 @@
 import {
     petAttributes,
 } from '../values/variables/gameData'
-
 import {
     gameSettings,
     actionProbabilities,
@@ -10,11 +9,7 @@ import {
 
 import Timer from '../components/timer/gameTimer'
 
-import  {Pet} from '../entities/pet'
-
 import { EventBus } from '../game/EventBus';
-
-
 
 
 class Actions {
@@ -29,10 +24,6 @@ class Actions {
 
     private isGameFinished: boolean = false;
   
-
-    private pet?: Pet;
-
-
     constructor(selectedAction: string, timer: Timer) {
         this.selectedAction = selectedAction;
         this.timer = timer;
@@ -40,22 +31,10 @@ class Actions {
         this.checkAction();
      }
 
-     public getIsCorrectButton() {
-        return this.isCorrectButton;
-     }
-
-     public getBackgroundManager(): string {
-        return this.backgroundManager;
-     }
-
     private checkAction() {
         const crtAction = petAttributes.currentAction
-        console.log( "crt", crtAction) 
-        
         if (crtAction) {
-            console.log('я тута')
             this.backgroundManager = null;
-
             if (this.timer.timeEvent.paused === false ) {
                     this.timer.scaleTweenWarning()   
             }
@@ -83,26 +62,13 @@ class Actions {
         }
     }
     
-    public setIsGameFinished(val: boolean) {
-        this.isGameFinished = val;
-    }
-
-    public getIsGameFinished() {
-       return this.isGameFinished;
-    }
-
     private isGameFinishedCheck(): boolean {
-        
-        console.log(`actionsDone: ${petAttributes.actionsDone}, mood: ${petAttributes.mood}`);
-
         if (petAttributes.actionsDone >= gameSettings.maxNumActions &&
             petAttributes.mood >= gameSettings.minWinMood) {    
             return true;
         }
-
         return false;
     }
-
 
     private newAction() {
         this.currentAction = this.generateRandomAction()
@@ -111,43 +77,27 @@ class Actions {
         this.timer.start(this.currentDelay) //too implicit
     }
 
-    public getCrtAction(): string {
-        console.log(this.currentAction)
-        return this.currentAction
-    }
-
-    public getCrtDelay(): number {
-        return this.currentDelay;
-    }
-
-
     private eatAction(): void {
         this.increaseMood()
-        console.log("eatAction");
     }
 
     private drinkAction(): void {
         this.increaseMood()
-        console.log("drinkAction");
     }
 
     private toiletAction(): void {
-        console.log("toiletAction");
     }
 
     private playAction(): void {
         this.increaseMood()
-        console.log("playAction");
     }
 
     private medicineAction(): void {
         this.backgroundManager = 'aidBackground'
-        console.log("medicineAction");
     }
 
     private sleepAction(): void {
         this.backgroundManager = 'sleepBackground'
-        console.log("sleepAction");
     }
 
     private wrongAction(): void {
@@ -165,20 +115,12 @@ class Actions {
         }
     }
 
-    public decreaseMood() {
-        --petAttributes.mood;
-        this.isGameOver();
-    }
-
     private isGameOver(): void {
          if (petAttributes.mood === 0)
          {
             EventBus.emit('gameOver')
          }
     }
-
-
-    
 
     private generateRandomAction(): string {
         const actions = Object.keys(actionProbabilities);
@@ -202,6 +144,11 @@ class Actions {
         return randomTime;
     }
 
+    public decreaseMood() {
+        --petAttributes.mood;
+        this.isGameOver();
+    }
+
     public setKey(selectedAction: string) {
         this.selectedAction = selectedAction;
     }
@@ -211,7 +158,7 @@ class Actions {
     }
 
     public setWaitingTimer() {
-        this.timer.liteTimer();
+        this.timer.warningTimer();
     }
 
     public resetPenaltyTimer() {
@@ -220,6 +167,31 @@ class Actions {
 
     public removeWaitingTImers() {
         this.timer.stopTimers()
+    }
+
+    public getCrtAction(): string {
+        console.log(this.currentAction)
+        return this.currentAction
+    }
+
+    public getCrtDelay(): number {
+        return this.currentDelay;
+    }
+
+    public getIsCorrectButton() {
+        return this.isCorrectButton;
+    }
+
+    public getBackgroundManager(): string {
+        return this.backgroundManager;
+    }
+
+    public setIsGameFinished(val: boolean) {
+        this.isGameFinished = val;
+    }
+
+    public getIsGameFinished() {
+       return this.isGameFinished;
     }
 
 }

@@ -1,37 +1,21 @@
-import { type Dispatch, type SetStateAction, useEffect, useState, useRef } from 'react'
-import Image from 'next/image'
-import { useQuery, useQueryClient  } from '@tanstack/react-query'
+import { useEffect, useState } from 'react'
+import { useQuery  } from '@tanstack/react-query'
 import { useAccount } from 'wagmi'
-import clsx from 'clsx'
 
-// Utilities
-import { getIdFromHash, ipfsToHttps } from '@/utils'
+import { ipfsToHttps } from '@/utils'
 
-// Requests
 import { getNFTs } from '@/requests'
 
-// Components
-import {  } from '@/components'
-
-import {IRefPhaserGame, MainMenuScene, NFTCollectionScene} from '@/src'
-
-
-
-// Types
 import { INFT } from '@/types'
-import { MainMenu } from '@/src/scenes/GameScene'
-
 
 
 function NFTCollection({currentActiveScene}) {
 
-    const { address } = useAccount()
-    const [nftData, setNftData] = useState<INFT | null>(null)
-    const { isConnected } = useAccount()
+  const { address } = useAccount()
+  const [nftData, setNftData] = useState<INFT | null>(null)
+  const { isConnected } = useAccount()
 
-    const [isModalOpened, setIsModalOpened] = useState(false)
-
-    const { data, isLoading, isFetching } = useQuery({
+  const { data, isLoading, isFetching } = useQuery({
       queryKey: ['userNfts', address],
       enabled: !!address,
       queryFn: () => getNFTs(address),
@@ -45,8 +29,6 @@ function NFTCollection({currentActiveScene}) {
         setNftData(data?.data?.ownedNfts?.[totalCount - 1] || null) //last owned nft
     }
   }, [data])
-
-    console.log(currentActiveScene)
 
     const loadCollectionScene = () => {
       if(currentActiveScene) 
@@ -72,11 +54,9 @@ function NFTCollection({currentActiveScene}) {
                 scene.changeSceneToMainMenu();
             }
         }
-      
     }
 
     const handleClick = () => {
-      setIsModalOpened(!isModalOpened);
       loadCollectionScene();
     };
 

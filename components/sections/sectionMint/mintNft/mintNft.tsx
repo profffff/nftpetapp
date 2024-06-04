@@ -30,45 +30,38 @@ interface MintNftProps {
 
 const mintNft = ({ isSectionActive, MintNFTActive }: MintNftProps) => {
   
-  const { address, isConnected, isDisconnected } = useAccount()
-  const [mintedMetadata, setMintedMetadata] = useState<
-  IMintedMetadata | null | undefined
->(null)
-  
-  const navRef = useRef<HTMLElement>(null)
-  const [isModalOpened, setIsModalOpened] = useState(false)
-  const { state, dispatch, mintNFT } = useMint()
+const { address, isConnected } = useAccount()
+const [mintedMetadata, setMintedMetadata] = useState<IMintedMetadata | null | undefined>(null)
 
-  const [showNFTCollectionModal, setShowNFTCollectionModal] = useState(false)
+const navRef = useRef<HTMLElement>(null)
+const { state, dispatch, mintNFT } = useMint()
 
-  const queryClient = useQueryClient()
+const queryClient = useQueryClient()
 
-  const [mintedNFTId, setMintedNFTId] = useState<number | undefined>(
-    undefined
-)
+const [mintedNFTId, setMintedNFTId] = useState<number | undefined>( undefined)
 
-  const { 
-    data: hash,
-    error,
-    isPending, 
-    writeContract 
-  } = useWriteContract() 
-  
+const { 
+  data: hash,
+  error,
+  isPending, 
+  writeContract 
+} = useWriteContract() 
 
-  const {
-    status: claimedMetadataStatus,
-    isFetching: isClaimedMetadataFetching,
-    isError: isClaimedMetadataError,
-    data: claimedMetadata,
-    refetch: fetchClaimedMetadata,
-    error: claimedMetadataError,
-    isSuccess: isClaimedMetadataSuccess,
+
+const {
+  status: claimedMetadataStatus,
+  isFetching: isClaimedMetadataFetching,
+  isError: isClaimedMetadataError,
+  data: claimedMetadata,
+  refetch: fetchClaimedMetadata,
+  error: claimedMetadataError,
+  isSuccess: isClaimedMetadataSuccess,
 } = useQuery({
-    enabled: false,
-    queryKey: ['nftURILink', mintedNFTId],
-    queryFn: () => getNFTMetadata(mintedNFTId),
-    staleTime: Infinity,
-    refetchOnWindowFocus: false,
+  enabled: false,
+  queryKey: ['nftURILink', mintedNFTId],
+  queryFn: () => getNFTMetadata(mintedNFTId),
+  staleTime: Infinity,
+  refetchOnWindowFocus: false,
 })
 
 useEffect(() => {
@@ -85,129 +78,109 @@ const claimedNFTModalData = useMemo(
   [mintedMetadata]
 )
 
+async function submit(e: React.FormEvent<HTMLFormElement>) { 
+  e.preventDefault() 
+  mintNFT(address);
 
+} 
 
-  async function submit(e: React.FormEvent<HTMLFormElement>) { 
-    e.preventDefault() 
-    mintNFT(address);
-  
-  } 
-
-  const { isLoading: isConfirming, isSuccess: isConfirmed } = 
-    useWaitForTransactionReceipt({ 
-      hash, 
-    }) 
+const { isLoading: isConfirming, isSuccess: isConfirmed } = 
+  useWaitForTransactionReceipt({ 
+  hash, 
+}) 
     
-    
-    useEffect(() => {
-      if (
-          claimedMetadataStatus === 'success' ||
-          claimedMetadataStatus === 'error'
-      ) {
-          setMintedNFTId(undefined)
+useEffect(() => {
+  if (
+      claimedMetadataStatus === 'success' ||
+      claimedMetadataStatus === 'error'
+  ) {
+      setMintedNFTId(undefined)
 
-          setMintedMetadata({
-              ...claimedMetadata?.data?.metadata,
-              id: claimedMetadata?.data?.id?.tokenId
-          })
- 
+      setMintedMetadata({
+          ...claimedMetadata?.data?.metadata,
+          id: claimedMetadata?.data?.id?.tokenId
+      })
 
-          queryClient.setQueryData( 
-              ['userNfts', address],
-              (oldData: null | undefined | GetNfts) => {
-                  if (oldData?.data) {
-                      return {
-                          ...oldData,
-                          data: {
-                              ...oldData.data,
-                              ownedNfts: [
-                                  ...oldData.data.ownedNfts,
-                                  { ...claimedMetadata?.data },
-                              ],
-                          },
-                      }
+      queryClient.setQueryData( 
+          ['userNfts', address],
+          (oldData: null | undefined | GetNfts) => {
+              if (oldData?.data) {
+                  return {
+                      ...oldData,
+                      data: {
+                          ...oldData.data,
+                          ownedNfts: [
+                              ...oldData.data.ownedNfts,
+                              { ...claimedMetadata?.data },
+                          ],
+                      },
                   }
               }
-          )
-   
-      }
-              }, [
-                  claimedMetadataStatus,
-                  claimedMetadata,
-                //  queryClient,
-                  address,
-              ])
+          }
+      )
+
+  }
+  }, [
+      claimedMetadataStatus,
+      claimedMetadata,
+     // queryClient,
+      address,
+  ])
     
 
-    useEffect(() => {
-      const data = state.receiptData
-      if (data?.status === 'success') {  
-          const logsWithId = data?.logs?.find((item) => item.data === '0x')
-          setMintedNFTId(
-            // @ts-ignore
-              logsWithId?.topics?.[3] // @ts-ignore 
-                  ? fromHex(logsWithId?.topics?.[3]!, 'number') 
-                  : undefined
-          )
-          MintNFTActive(false);
-      }
-  }, [state.receiptData])
+useEffect(() => {
+  const data = state.receiptData
+  if (data?.status === 'success') {  
+      const logsWithId = data?.logs?.find((item) => item.data === '0x')
+      setMintedNFTId(
+        // @ts-ignore
+          logsWithId?.topics?.[3] // @ts-ignore 
+              ? fromHex(logsWithId?.topics?.[3]!, 'number') 
+              : undefined
+      )
+      MintNFTActive(false);
+  }
+}, [state.receiptData])
 
-  useEffect(() => {
+useEffect(() => {
     setMintedNFTId(undefined)
     setMintedMetadata(null)
     queryClient.removeQueries({ queryKey: ['nftURILink'], exact: false })
     dispatch(undefined)
 }, [address, dispatch])
 
-  return (
-    <nav
-            ref={navRef}
-        >
-    <form onSubmit={submit}>
-  
-      <button className="button"
-        disabled={!isConnected || isPending ||
-          state.isLoading || !isSectionActive
-        } 
-        type="submit"
-      >
-        {isPending ? 'Confirming...' : 'Mint'} 
-      </button>
-      {hash && <div>Transaction Hash: {hash}</div>}
-      {isConfirming && <div>Waiting for confirmation...</div>} 
-      {isConfirmed && <div>Transaction confirmed.</div>} 
-      {error && (
-        <div>Error: {(error as BaseError).shortMessage || error.message}</div>
-      )}
+return (
+    <nav ref={navRef} >
+      <form onSubmit={submit}>
+          <button className="button"
+            disabled={!isConnected || isPending ||
+              state.isLoading || !isSectionActive
+            } 
+            type="submit">
+          {isPending ? 'Confirming...' : 'Mint'} 
+          </button>
+          {hash && <div>Transaction Hash: {hash}</div>}
+          {isConfirming && <div>Waiting for confirmation...</div>} 
+          {isConfirmed && <div>Transaction confirmed.</div>} 
+          {error && (
+            <div>Error: {(error as BaseError).shortMessage || error.message}</div>
+          )}
+      </form>
 
-
-      
-    </form>
-
-    <InfoMessageWrapper
-                        isLoading={
-                            state.isPrepareLoading ||
-                            state.isReceiptLoading
-                        }
-                        isError={
-                            state.isError 
-                        }
-                        isActionRequired={state.isWriteLoading}
-                    >
-                    <InfoMessage
-                            isNoTokens={state.isNoTokens}
-                            isPrepareLoading={state.isPrepareLoading}
-                            prepareError={state.prepareError}
-                            isWriteLoading={state.isWriteLoading}
-                            isReceiptLoading={state.isReceiptLoading}
-                            receiptError={state.receiptError}
-                            transactionError={state.writeError}
-                            isWalletConnected={isConnected ? true : false} 
-                        />
-
-                    </InfoMessageWrapper>
-      
+      <InfoMessageWrapper
+          isLoading={ state.isPrepareLoading || state.isReceiptLoading }
+          isError={ state.isError }
+          isActionRequired={state.isWriteLoading}>
+        <InfoMessage
+              isNoTokens={state.isNoTokens}
+              isPrepareLoading={state.isPrepareLoading}
+              prepareError={state.prepareError}
+              isWriteLoading={state.isWriteLoading}
+              isReceiptLoading={state.isReceiptLoading}
+              receiptError={state.receiptError}
+              transactionError={state.writeError}
+              isWalletConnected={isConnected ? true : false}/>
+      </InfoMessageWrapper>     
     </nav>
   )
 }

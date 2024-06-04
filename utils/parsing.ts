@@ -1,23 +1,5 @@
 import { fromHex, isHex } from 'viem'
 
-/**
- * Shortens a hexadecimal string by replacing the middle part with ellipsis.
- *
- * @param {string | undefined} hexString - The input hexadecimal string to be shortened.
- * @returns {string | undefined} A shortened version of the input string with ellipsis in the middle,
- * or undefined if the input string is falsy.
- */
-const shortenHexString = (hexString: string | undefined) => {
-    if (!hexString) return undefined
-
-    const prefixLength = 4
-    const suffixLength = 4
-
-    const firstPart = hexString.slice(0, prefixLength)
-    const lastPart = hexString.slice(-suffixLength)
-
-    return `${firstPart}...${lastPart}`
-}
 
 /**
  * Converts an IPFS URL to its corresponding HTTPS URL.
@@ -44,27 +26,6 @@ const getIdFromHash = (hashId: undefined | string): string | undefined => {
         : hashId
 }
 
-/**
- * Truncates the decimal places of a numeric string while preserving "0".
- *
- * @param {string | undefined} input - The numeric string to truncate or undefined.
- * @param {number} fixed - The number of decimal places to preserve.
- * @returns {string | undefined} The truncated numeric string or undefined if input is invalid.
- */
-const limitDecimals = (
-    input: string | undefined,
-    fixed: number = 0
-): string | undefined => {
-    if (input === undefined || input === '0') return input
 
-    const num = parseFloat(input)
 
-    if (!isNaN(num)) {
-        const multiplier = Math.pow(10, fixed)
-        return (Math.floor(num * multiplier) / multiplier).toString()
-    }
-
-    return undefined
-}
-
-export { shortenHexString, ipfsToHttps, getIdFromHash, limitDecimals }
+export { ipfsToHttps, getIdFromHash }

@@ -4,13 +4,11 @@ import { useAccount } from 'wagmi'
 
 const ConnectButton = () => {
 
+// modal hook
+const { open } = useWeb3Modal()
 
-  // 4. Use modal hook
-  const { open } = useWeb3Modal()
-
-  const { isConnected } = useAccount()
+const { isConnected } = useAccount()
   
- // dispatch({ isWalletConnected: true })
   return (
     <>
     <div>

@@ -1,10 +1,5 @@
 import { Scene } from 'phaser';
 
-import {petStartAttributes} from '../../values/constants/gameConstants'
-import {initializePetAttributes} from '../../values/variables/gameData'
-
-import {sceneManager} from '../../entities/sceneManager'
-
 export class Preloader extends Scene
 {
     constructor ()
@@ -62,14 +57,10 @@ export class Preloader extends Scene
 
     create ()
     {
-        
-        
-
         this.scene.start('MainMenu');
     }
 
     update() {
-
     }
 }
 

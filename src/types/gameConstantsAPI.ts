@@ -41,7 +41,6 @@ export interface TimerIcon  {
 export interface ActionsDelay {
     minTimeBeforeActon: number;
     maxTimeBeforeActon: number;
-    waitingTimeForActionLite: number;
     waitingTimeForActionWarning: number;
     waitingTimeForActionPenalty: number;
 }
