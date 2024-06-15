@@ -63,7 +63,7 @@ export const petStartAttributes: PetStartAttributes  = {
 
 export const gameSettings: GameSettings = {
     minWinMood: 8, 
-    maxNumActions: 1, 
+    maxNumActions: 15, 
     maxMood: 10,
     probIncMood: 40,
 }
